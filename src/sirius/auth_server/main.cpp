@@ -11,7 +11,7 @@ int main() {
 	http_server server(max_thread_num);
 	server.listen("0.0.0.0", "8080");
 	server.set_http_handler<GET, POST>("/", [](request &req, response &res) {
-	  res.set_status_and_content(status_type::ok, "hello world");
+		res.set_status_and_content(status_type::ok, "hello world");
 	});
 
 	server.run();

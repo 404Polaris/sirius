@@ -45,14 +45,14 @@ namespace sirius::common::network {
 		asio::async_write(socket_,
 						  asio::buffer(write_queue_.front().data(), write_queue_.front().size()),
 						  [this, self](std::error_code ec, std::size_t) {
-							if (!ec) {
-								write_queue_.pop_front();
-								if (!write_queue_.empty()) {
-									DoWrite();
-								}
-							} else {
-								closed_ = true;
-							}
+							  if (!ec) {
+								  write_queue_.pop_front();
+								  if (!write_queue_.empty()) {
+									  DoWrite();
+								  }
+							  } else {
+								  closed_ = true;
+							  }
 						  });
 	}
 
@@ -64,11 +64,11 @@ namespace sirius::common::network {
 		asio::async_read(socket_,
 						 asio::buffer(read_msg_.Data(), _Msg_type::header_length),
 						 [this, self](std::error_code ec, std::size_t) {
-						   if (!ec && read_msg_.DecodeHeader()) {
-							   DoReadBody();
-						   } else {
-							   closed_ = true;
-						   }
+							 if (!ec && read_msg_.DecodeHeader()) {
+								 DoReadBody();
+							 } else {
+								 closed_ = true;
+							 }
 						 });
 	}
 
@@ -80,11 +80,11 @@ namespace sirius::common::network {
 		asio::async_read(socket_,
 						 asio::buffer(read_msg_.Body(), read_msg_.BodyLength()),
 						 [this, self](std::error_code ec, std::size_t) {
-						   if (!ec) {
-							   DoReadHeader();
-						   } else {
-							   closed_ = true;
-						   }
+							 if (!ec) {
+								 DoReadHeader();
+							 } else {
+								 closed_ = true;
+							 }
 						 });
 	}
 

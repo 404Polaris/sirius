@@ -21,9 +21,9 @@ namespace sirius::common {
 		}
 
 		acceptor_->async_accept([this](std::error_code ec, asio::ip::tcp::socket socket) {
-		  if (!ec) {
-			  Accept();
-		  }
+			if (!ec) {
+				Accept();
+			}
 		});
 	}
 
@@ -41,7 +41,7 @@ namespace sirius::common {
 		run_ = false;
 		io_context_->stop();
 		ReleaseCPUUntil([this]() {
-		  return io_context_->stopped();
+			return io_context_->stopped();
 		});
 	}
 
