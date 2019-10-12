@@ -4,7 +4,7 @@ project(common)
 set(CMAKE_CXX_STANDARD 17)
 
 set(commone_files
-        network/tcp_server.cpp ../auth_server/main.cpp)
+        network/tcp_server.cpp)
 
 
 add_library(common SHARED ${commone_files})
