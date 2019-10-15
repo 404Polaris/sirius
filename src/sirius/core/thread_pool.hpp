@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <sirius/login/core/nocopyable.hpp>
+#include <sirius/core/nocopyable.hpp>
 
 #include <asio.hpp>
 #include <memory>

@@ -4,12 +4,15 @@
 
 
 #pragma once
-#include <sirius/login/core/nocopyable.hpp>
+#include <sirius/core/nocopyable.hpp>
 
 namespace sirius::core {
 
+	template<typename _pkt_type>
 	class tcp_session : nocopyable {
+	protected:
 
+	public:
 	};
 }
 

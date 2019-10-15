@@ -9,8 +9,8 @@
 #define ASIO_STANDALONE
 #endif
 
-#include <sirius/login/core/nocopyable.hpp>
-#include <sirius/login/core/network/tcp_session.hpp>
+#include <sirius/core/nocopyable.hpp>
+#include <sirius/core/network/tcp_session.hpp>
 
 #include <asio.hpp>
 
@@ -35,18 +35,18 @@ namespace sirius::core {
 	public:
 		void start();
 	private:
-		void do_accept();
+		void accept();
 	};
 
 	tcp_server::tcp_server(unsigned short port) :
 		running_(false),
-		acceptor_(io_context_, net_lib::tcp::endpoint(net_lib::tcp::v4(), port)) {
+		acceptor_(io_context_, net_lib::tcp::endpoint(net_lib::tcp::v4(), static_cast<unsigned short>(port))) {
 	}
 
 	void tcp_server::start() {
 		running_ = true;
 
-		do_accept();
+		accept();
 
 		for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
 			threads_.emplace_back([this]() {
@@ -55,7 +55,7 @@ namespace sirius::core {
 		}
 	}
 
-	void tcp_server::do_accept() {
+	void tcp_server::accept() {
 		if (!running_)return;
 
 		acceptor_.async_accept(
@@ -65,7 +65,7 @@ namespace sirius::core {
 
 				}
 
-				do_accept();
+				accept();
 			});
 
 	}
