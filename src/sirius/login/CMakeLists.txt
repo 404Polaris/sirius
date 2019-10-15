@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(login-server)
 
-set(source_file_list main.cpp system/network_system.cpp system/network_system.h)
+set(source_file_list main.cpp)
 
 add_executable(login-cli ${source_file_list})
-target_link_libraries(login-cli PRIVATE EnTT)
+target_link_libraries(login-cli PUBLIC EnTT pthread)
 
 set(CMAKE_CXX_STANDARD 17)
