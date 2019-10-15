@@ -8,7 +8,7 @@
 
 namespace sirius::core {
 
-	template<typename _pkt_type>
+	template<typename _pkt_reader_type>
 	class tcp_session : nocopyable {
 	protected:
 

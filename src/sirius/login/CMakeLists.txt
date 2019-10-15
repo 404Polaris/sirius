@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(login-server)
 
-set(source_file_list main.cpp game/network/packet.cpp game/network/packet.h)
+set(source_file_list main.cpp)
 
 add_executable(login-cli ${source_file_list})
 target_link_libraries(login-cli PUBLIC EnTT fmt::fmt fmt::fmt-header-only pthread)
