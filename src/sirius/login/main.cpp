@@ -3,11 +3,16 @@
 //
 
 #include <sirius/login/core/network/tcp_server.hpp>
-#include <sirius/login/core/thread_pool.hpp>
 
 #include <iostream>
 
 int main() {
+
+	sirius::core::tcp_server server(7000);
+	server.start();
+
+	char c;
+	std::cin >> c;
 
 	return 0;
 }
