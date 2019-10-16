@@ -3,4 +3,4 @@ project(sirius)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(sirius/login)
+add_subdirectory(sirius/server)
