@@ -19,8 +19,8 @@ namespace sirius::core {
 
 	template<typename _pkt_reader_type, typename _env_type>
 	class tcp_session : public std::enable_shared_from_this<tcp_session<_pkt_reader_type, _env_type>>,
-						enable_sirius_env<_env_type>,
-						nocopyable {
+						public enable_sirius_env<_env_type>,
+						public nocopyable {
 	protected:
 		_pkt_reader_type reader_;
 		net_lib::tcp::socket socket_;
@@ -51,15 +51,18 @@ namespace sirius::core {
 
 	template<typename _pkt_reader_type, typename _env_type>
 	void tcp_session<_pkt_reader_type, _env_type>::read_pkt() {
-		auto[failed, length] = reader_.should_read();
+		auto[no_error, length] = reader_.should_read();
 
-		if (failed)return;
+		if (!no_error)return;
+
+		auto that = this->shared_from_this();
 
 		asio::async_read(socket_,
-						 asio::buffer(reader_.data(), length),
-						 asio::bind_executor(strand_, [this](std::error_code ec, std::size_t) {
+						 asio::buffer(reader_.tail(), length),
+						 asio::bind_executor(strand_, [that](std::error_code ec, std::size_t n) {
 							 if (!ec) {
-								 read_pkt();
+								 that->reader_.write(n);
+								 that->read_pkt();
 							 }
 						 }));
 	}

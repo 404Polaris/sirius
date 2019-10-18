@@ -9,9 +9,9 @@
 #include <memory>
 
 namespace sirius::login_server::component {
-	template<typename _pkt_reader_type, typename _env_type>
+	template<typename _real_session_type>
 	struct session {
-		std::shared_ptr<sirius::core::tcp_session<_pkt_reader_type, _env_type>> real_session_;
+		std::shared_ptr<_real_session_type> real_session_;
 	};
 }
 
