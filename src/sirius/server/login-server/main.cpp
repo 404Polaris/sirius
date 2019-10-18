@@ -2,17 +2,17 @@
 // Created by 404Polaris on 2019/10/15.
 //
 
-#include <sirius/core/network/tcp_server.hpp>
-
+#include <sirius/server/login-server/app.hpp>
 #include <iostream>
+
 
 int main() {
 
-	sirius::core::tcp_server server(7000);
-	server.start();
+	sirius::login_server::app app;
+	app.start();
 
-	char c;
-	std::cin >> c;
+	char ch;
+	std::cin >> ch;
 
 	return 0;
 }

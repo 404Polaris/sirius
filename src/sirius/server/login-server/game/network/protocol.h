@@ -60,4 +60,17 @@ typedef struct {
 	uint8_t number_of_keys;
 } s_auth_reconnect_proof_c;
 
+typedef struct {
+	uint8_t cmd;
+} s_realm_list_c;
+
 #pragma pack(pop)
+
+enum class login_server_cmd : uint8_t {
+	kAuthLogonChallenge = 0x00,
+	kAuthLogonProof = 0x01,
+	kAuthReconnectChallenge = 0x02,
+	kAuthReconnectProof = 0x03,
+	kRealmList = 0x10,
+};
+

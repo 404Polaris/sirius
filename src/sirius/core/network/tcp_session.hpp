@@ -6,7 +6,9 @@
 #pragma once
 
 #include <sirius/core/nocopyable.hpp>
+#include <sirius/core/enable_sirius_env.hpp>
 
+#include <memory>
 #include <asio.hpp>
 
 namespace sirius::core {
@@ -15,36 +17,51 @@ namespace sirius::core {
 		using tcp = asio::ip::tcp;
 	}
 
-	template<typename _pkt_reader_type>
-	class tcp_session : nocopyable {
+	template<typename _pkt_reader_type, typename _env_type>
+	class tcp_session : public std::enable_shared_from_this<tcp_session<_pkt_reader_type, _env_type>>,
+						enable_sirius_env<_env_type>,
+						nocopyable {
 	protected:
 		_pkt_reader_type reader_;
 		net_lib::tcp::socket socket_;
+		net_lib::io_context::strand strand_;
 	public:
-		explicit tcp_session(net_lib::tcp::socket socket);
+		explicit tcp_session(net_lib::tcp::socket socket, net_lib::io_context &io_context);
 		~tcp_session();
 	public:
+		void start();
+	protected:
 		void read_pkt();
-		void read_some(std::unique_ptr<_pkt_reader_type> reader);
 	};
 
-	template<typename _pkt_reader_type>
-	tcp_session<_pkt_reader_type>::tcp_session(net_lib::tcp::socket socket):socket_(std::move(socket)) {
-
+	template<typename _pkt_reader_type, typename _env_type>
+	tcp_session<_pkt_reader_type, _env_type>::tcp_session(net_lib::tcp::socket socket, net_lib::io_context &io_context)
+		:socket_(std::move(socket)), strand_(io_context) {
 	}
-	template<typename _pkt_reader_type>
-	tcp_session<_pkt_reader_type>::~tcp_session() {
+
+	template<typename _pkt_reader_type, typename _env_type>
+	tcp_session<_pkt_reader_type, _env_type>::~tcp_session() {
 		socket_.close();
 	}
 
-	template<typename _pkt_reader_type>
-	void tcp_session<_pkt_reader_type>::read_pkt() {
-
+	template<typename _pkt_reader_type, typename _env_type>
+	void tcp_session<_pkt_reader_type, _env_type>::start() {
+		read_pkt();
 	}
 
-	template<typename _pkt_reader_type>
-	void tcp_session<_pkt_reader_type>::read_some(std::unique_ptr<_pkt_reader_type> reader) {
+	template<typename _pkt_reader_type, typename _env_type>
+	void tcp_session<_pkt_reader_type, _env_type>::read_pkt() {
+		auto[failed, length] = reader_.should_read();
 
+		if (failed)return;
+
+		asio::async_read(socket_,
+						 asio::buffer(reader_.data(), length),
+						 asio::bind_executor(strand_, [this](std::error_code ec, std::size_t) {
+							 if (!ec) {
+								 read_pkt();
+							 }
+						 }));
 	}
 }
 
