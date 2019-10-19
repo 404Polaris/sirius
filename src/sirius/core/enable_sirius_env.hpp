@@ -23,12 +23,12 @@ namespace sirius::core {
 	};
 
 	template<typename _env_type>
-	void enable_sirius_env<_env_type>::register_env(const std::shared_ptr<_env_type> &env) {
+	inline void enable_sirius_env<_env_type>::register_env(const std::shared_ptr<_env_type> &env) {
 		this->env_ = env;
 	}
 
 	template<typename _env_type>
-	std::shared_ptr<_env_type> enable_sirius_env<_env_type>::env() {
+	inline std::shared_ptr<_env_type> enable_sirius_env<_env_type>::env() {
 		if (auto ptr = env_.lock();ptr != nullptr) {
 			return ptr;
 		}

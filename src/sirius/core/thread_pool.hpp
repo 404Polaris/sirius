@@ -27,24 +27,24 @@ namespace sirius::core {
 		size_t size();
 	};
 
-	thread_pool::thread_pool(size_t num) : thread_num_(num) {
+	inline thread_pool::thread_pool(size_t num) : thread_num_(num) {
 		thread_pool_ = std::make_unique<asio::thread_pool>(num);
 	}
 
-	thread_pool::thread_pool() : thread_pool(std::thread::hardware_concurrency()) {
+	inline thread_pool::thread_pool() : thread_pool(std::thread::hardware_concurrency()) {
 
 	}
 
 	template<typename task_type>
-	void thread_pool::push_task(task_type &&task) {
+	inline void thread_pool::push_task(task_type &&task) {
 		asio::post(*thread_pool_, std::forward<task_type>(task));
 	}
 
-	size_t thread_pool::size() {
+	inline size_t thread_pool::size() {
 		return thread_num_;
 	}
 
-	thread_pool::~thread_pool() {
+	inline thread_pool::~thread_pool() {
 		thread_pool_->stop();
 		thread_pool_->join();
 		thread_pool_.reset();

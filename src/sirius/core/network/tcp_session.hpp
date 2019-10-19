@@ -43,23 +43,24 @@ namespace sirius::core {
 	};
 
 	template<typename _pkt_reader_type, typename _env_type>
-	tcp_session<_pkt_reader_type, _env_type>::tcp_session(net_lib::tcp::socket socket, net_lib::io_context &io_context)
-		:socket_(std::move(socket)), strand_(io_context), write_flag_(false) {
+	inline tcp_session<_pkt_reader_type, _env_type>::tcp_session(net_lib::tcp::socket socket,
+																 net_lib::io_context &io_context)
+		:socket_(std::move(socket)), strand_(io_context), write_flag_(false), work_fine_(false) {
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	tcp_session<_pkt_reader_type, _env_type>::~tcp_session() {
+	inline tcp_session<_pkt_reader_type, _env_type>::~tcp_session() {
 		socket_.close();
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	void tcp_session<_pkt_reader_type, _env_type>::start() {
+	inline void tcp_session<_pkt_reader_type, _env_type>::start() {
 		work_fine_ = true;
 		read_pkt();
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	void tcp_session<_pkt_reader_type, _env_type>::read_pkt() {
+	inline void tcp_session<_pkt_reader_type, _env_type>::read_pkt() {
 		auto[no_error, length] = reader_.should_read();
 
 		if (!no_error)return;
@@ -79,7 +80,7 @@ namespace sirius::core {
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	void tcp_session<_pkt_reader_type, _env_type>::write_pkt(message_buffer buffer) {
+	inline void tcp_session<_pkt_reader_type, _env_type>::write_pkt(message_buffer buffer) {
 		auto that = this->shared_from_this();
 
 		asio::async_write(socket_,
@@ -100,7 +101,7 @@ namespace sirius::core {
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	void tcp_session<_pkt_reader_type, _env_type>::write(message_buffer buffer) {
+	inline void tcp_session<_pkt_reader_type, _env_type>::write(message_buffer buffer) {
 		auto that = this->shared_from_this();
 
 		asio::post(asio::bind_executor(strand_, [that, buffer]() {
@@ -114,7 +115,7 @@ namespace sirius::core {
 	}
 
 	template<typename _pkt_reader_type, typename _env_type>
-	bool tcp_session<_pkt_reader_type, _env_type>::work_fine() {
+	inline bool tcp_session<_pkt_reader_type, _env_type>::work_fine() {
 		return work_fine_;
 	}
 }

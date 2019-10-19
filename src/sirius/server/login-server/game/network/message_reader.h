@@ -40,7 +40,7 @@ namespace sirius::login_server::game {
 	}
 
 	template<typename msg_type>
-	std::tuple<bool, size_t> message_reader::check() {
+	inline std::tuple<bool, size_t> message_reader::check() {
 		const auto message_size = sizeof(msg_type);
 
 		std::tuple<bool, size_t> result{true, message_size - buffer_.size()};
@@ -80,7 +80,7 @@ namespace sirius::login_server::game {
 	}
 
 	template<typename msg_type>
-	void message_reader::read_complete() {
+	inline void message_reader::read_complete() {
 		auto buf = std::move(buffer_);
 		reset_buffer();
 		fmt::print("Read: {0} Complete! Size: {1} \n", typeid(msg_type).name(), buf.size());

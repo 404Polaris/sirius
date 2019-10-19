@@ -41,13 +41,13 @@ namespace sirius::core {
 	};
 
 	template<typename _session_type, typename _env_type>
-	tcp_server<_session_type, _env_type>::tcp_server(unsigned short port) :
+	inline tcp_server<_session_type, _env_type>::tcp_server(unsigned short port) :
 		running_(false),
 		acceptor_(io_context_, net_lib::tcp::endpoint(net_lib::tcp::v4(), static_cast<unsigned short>(port))) {
 	}
 
 	template<typename _session_type, typename _env_type>
-	void tcp_server<_session_type, _env_type>::start() {
+	inline void tcp_server<_session_type, _env_type>::start() {
 		running_ = true;
 
 		accept();
@@ -60,7 +60,7 @@ namespace sirius::core {
 	}
 
 	template<typename _session_type, typename _env_type>
-	void tcp_server<_session_type, _env_type>::accept() {
+	inline void tcp_server<_session_type, _env_type>::accept() {
 		if (!running_)return;
 
 		acceptor_.async_accept(
@@ -76,7 +76,7 @@ namespace sirius::core {
 	}
 
 	template<typename _session_type, typename _env_type>
-	tcp_server<_session_type, _env_type>::~tcp_server() {
+	inline tcp_server<_session_type, _env_type>::~tcp_server() {
 		bool flag = running_;
 		running_ = false;
 

@@ -25,22 +25,22 @@ namespace sirius::login_server {
 		void on_connect(const std::shared_ptr<session_type> &session);
 	};
 
-	app::app() {
+	inline app::app() {
 		server_ = std::make_unique<decltype(server_)::element_type>(3724);
 	}
 
-	void app::on_connect(const std::shared_ptr<session_type> &session) {
+	inline void app::on_connect(const std::shared_ptr<session_type> &session) {
 		auto entity = registry.create();
 		session->register_env(shared_from_this());
 		registry.assign<component::session<session_type>>(entity, session);
 	}
 
-	void app::start() {
+	inline void app::start() {
 		server_->register_env(shared_from_this());
 		server_->start();
 	}
 
-	void app::update() {
+	inline void app::update() {
 
 	}
 }
