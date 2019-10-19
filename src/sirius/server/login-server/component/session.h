@@ -12,9 +12,11 @@
 #include <memory>
 
 namespace sirius::login_server::component {
-	template<typename _real_session_type>
+	template<typename _session_type>
 	struct session {
-		std::shared_ptr<_real_session_type> session_;
+		std::shared_ptr<_session_type> session_;
+		std::queue<core::message_buffer> read_buffer_queue_;
+		std::queue<core::message_buffer> write_buffer_queue_;
 	};
 }
 

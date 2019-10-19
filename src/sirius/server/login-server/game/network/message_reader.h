@@ -22,17 +22,14 @@ namespace sirius::login_server::game {
 		core::message_buffer buffer_{cmd_size_};
 		inline static const auto cmd_size_ = sizeof(uint8_t);
 	public:
+		void init();
 		std::byte *tail();
 		void write(size_t n);
+		core::message_buffer pop_buffer();
 		std::tuple<bool, size_t> should_read();
 	protected:
 		template<typename msg_type>
 		std::tuple<bool, size_t> check();
-
-		template<typename msg_type>
-		void read_complete();
-	private:
-		void reset_buffer();
 	};
 
 	inline std::byte *message_reader::tail() {
@@ -47,9 +44,6 @@ namespace sirius::login_server::game {
 
 		if (buffer_.size() < message_size)
 			return result;
-
-		if (std::get<bool>(result) && std::get<size_t>(result) == 0)
-			read_complete<msg_type>();
 
 		return result;
 	}
@@ -73,25 +67,20 @@ namespace sirius::login_server::game {
 		auto legal = (buffer_.size() + 1 - sizeof(s_auth_logon_challenge_c) == challenge->i_len);
 		std::tuple<bool, size_t> result{legal, 0};
 
-		if (std::get<bool>(result) && std::get<size_t>(result) == 0)
-			read_complete<s_auth_logon_challenge_c>();
-
 		return result;
-	}
-
-	template<typename msg_type>
-	inline void message_reader::read_complete() {
-		auto buf = std::move(buffer_);
-		reset_buffer();
-		fmt::print("Read: {0} Complete! Size: {1} \n", typeid(msg_type).name(), buf.size());
 	}
 
 	inline void message_reader::write(size_t n) {
 		buffer_.write(n);
 	}
 
-	inline void message_reader::reset_buffer() {
-		buffer_ = core::message_buffer(cmd_size_);
+	inline core::message_buffer message_reader::pop_buffer() {
+		auto buffer = std::move(buffer_);
+		return std::move(buffer);
+	}
+
+	inline void message_reader::init() {
+		buffer_ = std::move(core::message_buffer(cmd_size_));
 	}
 }
 
