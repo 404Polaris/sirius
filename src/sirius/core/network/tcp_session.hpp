@@ -12,6 +12,7 @@
 #include <queue>
 #include <mutex>
 #include <memory>
+#include <atomic>
 #include <optional>
 #include <asio.hpp>
 
@@ -108,7 +109,7 @@ namespace sirius::core {
 						  asio::bind_executor(strand_, [that](std::error_code ec, std::size_t n) {
 							  if (!ec) {
 								  if (that->write_buffer_queue_.empty()) {
-									  that->write_flag = false;
+									  that->write_flag_ = false;
 								  } else {
 									  auto next_buffer = std::move(that->write_buffer_queue_.front());
 									  that->write_buffer_queue_.pop();
@@ -126,7 +127,7 @@ namespace sirius::core {
 
 		asio::post(asio::bind_executor(strand_, [that, buffer]() {
 			if (!(that->write_flag_)) {
-				that->write_flag = true;
+				that->write_flag_ = true;
 				that->write_msg(buffer);
 			} else {
 				that->write_buffer_queue_.push(buffer);

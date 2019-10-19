@@ -13,7 +13,6 @@
 #include <sirius/core/network/tcp_session.hpp>
 #include <sirius/core/enable_sirius_env.hpp>
 
-#include <entt/entt.hpp>
 #include <asio.hpp>
 
 namespace sirius::core {
