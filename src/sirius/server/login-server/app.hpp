@@ -12,9 +12,10 @@
 namespace sirius::login_server {
 	class app : public std::enable_shared_from_this<app> {
 		using session_type = sirius::core::tcp_session<game::message_reader, app>;
+		using tcp_server = sirius::core::tcp_server<session_type, app>;
 	private:
 		entt::registry registry;
-		std::unique_ptr<sirius::core::tcp_server<session_type, app>> server_;
+		std::unique_ptr<tcp_server> server_;
 	public:
 		app();
 		~app() = default;
