@@ -9,6 +9,7 @@
 #include <sirius/core/network/tcp_server.hpp>
 #include <sirius/server/login-server/component/session.h>
 #include <sirius/server/login-server/system/system_base.hpp>
+#include <sirius/server/login-server/system/login_system.h>
 #include <sirius/server/login-server/system/network_system.h>
 #include <sirius/server/login-server/component/login_status.h>
 #include <sirius/server/login-server/game/network/message_reader.h>
@@ -76,6 +77,7 @@ namespace sirius::login_server {
 
 	inline void app::create_system() {
 		system_list_.emplace_back(std::make_unique<_system_::network_system>());
+		system_list_.emplace_back(std::make_unique<_system_::login_system>());
 	}
 
 	inline void app::stop() {

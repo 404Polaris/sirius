@@ -31,7 +31,6 @@ namespace sirius::core {
 		std::mutex read_mutex_;
 		_msg_reader_type reader_;
 		net_lib::tcp::socket socket_;
-		std::atomic_bool write_flag_;
 		net_lib::io_context::strand strand_;
 		std::queue<message_buffer> read_buffer_queue_;
 		std::queue<message_buffer> write_buffer_queue_;
@@ -45,14 +44,14 @@ namespace sirius::core {
 		std::optional<message_buffer> read();
 	protected:
 		void read_msg();
-		void write_msg(message_buffer);
+		void write_msg();
 		void read_msg_complete();
 	};
 
 	template<typename _msg_reader_type, typename _env_type>
 	inline tcp_session<_msg_reader_type, _env_type>::tcp_session(net_lib::tcp::socket socket,
 																 net_lib::io_context &io_context)
-		:socket_(std::move(socket)), strand_(io_context), write_flag_(false), work_fine_(false) {
+		:socket_(std::move(socket)), strand_(io_context), work_fine_(false) {
 	}
 
 	template<typename _msg_reader_type, typename _env_type>
@@ -69,6 +68,8 @@ namespace sirius::core {
 
 	template<typename _msg_reader_type, typename _env_type>
 	inline void tcp_session<_msg_reader_type, _env_type>::read_msg() {
+		if (!work_fine_)return;
+
 		auto[no_error, length] = reader_.should_read();
 
 		if (!no_error)return;
@@ -101,19 +102,19 @@ namespace sirius::core {
 	}
 
 	template<typename _msg_reader_type, typename _env_type>
-	inline void tcp_session<_msg_reader_type, _env_type>::write_msg(message_buffer buffer) {
+	inline void tcp_session<_msg_reader_type, _env_type>::write_msg() {
+		if (!work_fine_)return;
+
 		auto that = this->shared_from_this();
 
 		asio::async_write(socket_,
-						  asio::buffer(buffer.data(), buffer.size()),
+						  asio::buffer(write_buffer_queue_.front().data(), write_buffer_queue_.front().size()),
 						  asio::bind_executor(strand_, [that](std::error_code ec, std::size_t n) {
 							  if (!ec) {
-								  if (that->write_buffer_queue_.empty()) {
-									  that->write_flag_ = false;
-								  } else {
-									  auto next_buffer = std::move(that->write_buffer_queue_.front());
-									  that->write_buffer_queue_.pop();
-									  that->write_msg(std::move(next_buffer));
+								  that->write_buffer_queue_.pop();
+
+								  if (!(that->write_buffer_queue_.empty())) {
+									  that->write_msg();
 								  }
 							  } else {
 								  that->work_fine_ = false;
@@ -123,14 +124,16 @@ namespace sirius::core {
 
 	template<typename _msg_reader_type, typename _env_type>
 	inline void tcp_session<_msg_reader_type, _env_type>::write(message_buffer buffer) {
+		if (!work_fine_)return;
+
 		auto that = this->shared_from_this();
 
-		asio::post(asio::bind_executor(strand_, [that, buffer]() {
-			if (!(that->write_flag_)) {
-				that->write_flag_ = true;
-				that->write_msg(buffer);
-			} else {
-				that->write_buffer_queue_.push(buffer);
+		asio::post(asio::bind_executor(strand_, [that, local_buffer = std::move(buffer)]() {
+			auto write_flag = !(that->write_buffer_queue_.empty());
+			that->write_buffer_queue_.push(local_buffer);
+
+			if (!write_flag) {
+				that->write_msg();
 			}
 		}));
 	}
@@ -147,7 +150,7 @@ namespace sirius::core {
 		if (read_buffer_queue_.empty())return std::nullopt;
 		auto buffer = std::move(read_buffer_queue_.front());
 		read_buffer_queue_.pop();
-		return std::move(buffer);
+		return buffer;
 	}
 }
 

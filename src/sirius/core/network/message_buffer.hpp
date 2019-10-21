@@ -7,6 +7,8 @@
 #include <vector>
 #include <cstddef>
 
+#include <fmt/format.h>
+
 namespace sirius::core {
 	class message_buffer {
 	private:
@@ -14,8 +16,8 @@ namespace sirius::core {
 		std::vector<std::byte> buffer_;
 	public:
 		explicit message_buffer(size_t n);
-		message_buffer(const message_buffer &other) = default;
-		message_buffer &operator=(const message_buffer &other) = default;
+		message_buffer(const message_buffer &other);
+		message_buffer &operator=(const message_buffer &other);
 		message_buffer(message_buffer &&other) noexcept;
 		message_buffer &operator=(message_buffer &&other) noexcept;
 	private:
@@ -65,6 +67,16 @@ namespace sirius::core {
 
 	inline std::byte *message_buffer::tail() {
 		return data() + size_;
+	}
+
+	inline message_buffer::message_buffer(const message_buffer &other) : buffer_(other.buffer_) {
+		fmt::print("Copy Construct.");
+	}
+
+	inline message_buffer &message_buffer::operator=(const message_buffer &other) {
+		fmt::print("Copy Assign.");
+		this->buffer_ = other.buffer_;
+		return *this;
 	}
 }
 

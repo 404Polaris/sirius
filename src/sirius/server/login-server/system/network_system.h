@@ -14,8 +14,10 @@ namespace sirius::login_server::system {
 
 	class network_system : public system_base {
 	public:
+		void init(entt::registry &registry) override;
 		void update(double delta, entt::registry &registry) override;
-		static void read_message(component::session &session);
+	public:
+		static void handle_message(component::session &session, entt::registry &registry);
 		static void write_message(component::session &session);
 	};
 }
