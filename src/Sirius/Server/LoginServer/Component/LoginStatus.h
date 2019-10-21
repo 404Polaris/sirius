@@ -6,9 +6,9 @@
 
 #include <cstdint>
 
-namespace sirius::login_server::component {
+namespace Sirius::LoginServer::Component {
 
-	enum class auth_status : uint8_t {
+	enum class AuthStatus : uint8_t {
 		kStatusChallenge = 0,
 		kStatusLogonProof,
 		kStatusReconnectProof,
@@ -17,7 +17,7 @@ namespace sirius::login_server::component {
 		kStatusClosed
 	};
 
-	struct login_status {
-		auth_status status;
+	struct LoginStatus {
+		AuthStatus status;
 	};
 }

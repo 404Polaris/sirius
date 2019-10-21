@@ -25,7 +25,7 @@ typedef struct {
 	uint32_t ip;
 	uint8_t i_len;
 	uint8_t i[1];
-} s_auth_logon_challenge_c;
+} S_AuthLogonChallenge_C;
 
 typedef struct {
 	uint8_t cmd;
@@ -34,7 +34,7 @@ typedef struct {
 	uint8_t crc_hash[20];
 	uint8_t number_of_keys;
 	uint8_t security_flags;
-} s_auth_logon_proof_c;
+} S_AuthLogonProof_C;
 
 typedef struct {
 	uint8_t cmd;
@@ -43,14 +43,14 @@ typedef struct {
 	uint32_t account_flags;
 	uint32_t survey_id;
 	uint16_t login_flags;
-} s_auth_logon_proof_s;
+} s_AuthLogonProof_S;
 
 typedef struct {
 	uint8_t cmd;
 	uint8_t error;
 	uint8_t m2[20];
 	uint32_t unk2;
-} s_auth_logon_proof_s_old;
+} S_AuthLogonProof_S_Old;
 
 typedef struct {
 	uint8_t cmd;
@@ -58,15 +58,15 @@ typedef struct {
 	uint8_t r2[20];
 	uint8_t r3[20];
 	uint8_t number_of_keys;
-} s_auth_reconnect_proof_c;
+} S_AuthReconnectProof_C;
 
 typedef struct {
 	uint8_t cmd;
-} s_realm_list_c;
+} S_RealmList_C;
 
 #pragma pack(pop)
 
-enum class login_server_cmd : uint8_t {
+enum class LoginServerCmd : uint8_t {
 	kAuthLogonChallenge = 0x00,
 	kAuthLogonProof = 0x01,
 	kAuthReconnectChallenge = 0x02,

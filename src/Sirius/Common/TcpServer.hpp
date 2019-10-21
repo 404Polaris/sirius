@@ -9,13 +9,13 @@
 #define ASIO_STANDALONE
 #endif
 
-#include <sirius/core/nocopyable.hpp>
-#include <sirius/core/network/tcp_session.hpp>
-#include <sirius/core/enable_sirius_env.hpp>
+#include <Sirius/Common/NoCopyAble.hpp>
+#include <Sirius/Common/TcpSession.hpp>
+#include <Sirius/Common/EnableSiriusEnv.hpp>
 
 #include <asio.hpp>
 
-namespace sirius::core {
+namespace Sirius {
 
 	namespace net_lib {
 		using namespace asio;
@@ -23,33 +23,33 @@ namespace sirius::core {
 	}
 
 	template<typename _session_type, typename _env_type>
-	class tcp_server : public enable_sirius_env<_env_type>,
-					   public nocopyable {
+	class TcpServer : public EnableSiriusEnv<_env_type>,
+					  public NoCopyAble {
 	protected:
 		std::atomic_bool running_;
 		net_lib::io_context io_context_;
 		net_lib::tcp::acceptor acceptor_;
 		std::vector<std::thread> threads_;
 	public:
-		explicit tcp_server(unsigned short port);
-		~tcp_server();
+		explicit TcpServer(unsigned short port);
+		~TcpServer();
 	public:
-		void start();
+		void Start();
 	private:
-		void accept();
+		void Accept();
 	};
 
 	template<typename _session_type, typename _env_type>
-	inline tcp_server<_session_type, _env_type>::tcp_server(unsigned short port) :
+	inline TcpServer<_session_type, _env_type>::TcpServer(unsigned short port) :
 		running_(false),
 		acceptor_(io_context_, net_lib::tcp::endpoint(net_lib::tcp::v4(), static_cast<unsigned short>(port))) {
 	}
 
 	template<typename _session_type, typename _env_type>
-	inline void tcp_server<_session_type, _env_type>::start() {
+	inline void TcpServer<_session_type, _env_type>::Start() {
 		running_ = true;
 
-		accept();
+		Accept();
 
 		for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
 			threads_.emplace_back([this]() {
@@ -59,23 +59,23 @@ namespace sirius::core {
 	}
 
 	template<typename _session_type, typename _env_type>
-	inline void tcp_server<_session_type, _env_type>::accept() {
+	inline void TcpServer<_session_type, _env_type>::Accept() {
 		if (!running_)return;
 
 		acceptor_.async_accept(
 			[this](std::error_code ec, net_lib::tcp::socket socket) {
 				if (!ec) {
 					auto session = std::make_shared<_session_type>(std::move(socket), io_context_);
-					this->env()->on_connect(session);
-					session->start();
+					this->Env()->OnConnect(session);
+					session->Start();
 				}
 
-				accept();
+				Accept();
 			});
 	}
 
 	template<typename _session_type, typename _env_type>
-	inline tcp_server<_session_type, _env_type>::~tcp_server() {
+	inline TcpServer<_session_type, _env_type>::~TcpServer() {
 		bool flag = running_;
 		running_ = false;
 

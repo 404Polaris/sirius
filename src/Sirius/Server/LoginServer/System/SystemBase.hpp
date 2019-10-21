@@ -6,9 +6,9 @@
 
 #include <entt/entt.hpp>
 
-namespace sirius::login_server::system {
+namespace Sirius::LoginServer::System {
 
-	class system_base {
+	class SystemBase {
 	public:
 		virtual void init(entt::registry &registry) {};
 		virtual void update(double delta, entt::registry &registry) {};

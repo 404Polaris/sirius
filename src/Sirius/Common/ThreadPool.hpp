@@ -5,46 +5,46 @@
 
 #pragma once
 
-#include <sirius/core/nocopyable.hpp>
+#include <Sirius/Common/NoCopyAble.hpp>
 
 #include <asio.hpp>
 #include <memory>
 #include <fmt/format.h>
 
-namespace sirius::core {
-	class thread_pool : nocopyable {
+namespace sirius {
+	class ThreadPool : NoCopyAble {
 	protected:
 		const size_t thread_num_;
 		std::unique_ptr<asio::thread_pool> thread_pool_;
 	public:
-		thread_pool();
-		~thread_pool();
-		explicit thread_pool(size_t num);
+		ThreadPool();
+		~ThreadPool();
+		explicit ThreadPool(size_t num);
 	public:
 		template<typename task_type>
-		void push_task(task_type &&task);
+		void Post(task_type &&task);
 
 		size_t size();
 	};
 
-	inline thread_pool::thread_pool(size_t num) : thread_num_(num) {
+	inline ThreadPool::ThreadPool(size_t num) : thread_num_(num) {
 		thread_pool_ = std::make_unique<asio::thread_pool>(num);
 	}
 
-	inline thread_pool::thread_pool() : thread_pool(std::thread::hardware_concurrency()) {
+	inline ThreadPool::ThreadPool() : ThreadPool(std::thread::hardware_concurrency()) {
 
 	}
 
 	template<typename task_type>
-	inline void thread_pool::push_task(task_type &&task) {
+	inline void ThreadPool::Post(task_type &&task) {
 		asio::post(*thread_pool_, std::forward<task_type>(task));
 	}
 
-	inline size_t thread_pool::size() {
+	inline size_t ThreadPool::Size() {
 		return thread_num_;
 	}
 
-	inline thread_pool::~thread_pool() {
+	inline ThreadPool::~thread_pool() {
 		thread_pool_->stop();
 		thread_pool_->join();
 		thread_pool_.reset();
