@@ -128,9 +128,9 @@ namespace Sirius {
 
 		auto that = this->shared_from_this();
 
-		asio::post(asio::bind_executor(strand_, [that, local_buffer = std::move(buffer)]() {
+		asio::post(asio::bind_executor(strand_, [that, local_buffer = std::move(buffer)]() mutable {
 			auto write_flag = !(that->write_buffer_queue_.empty());
-			that->write_buffer_queue_.push(local_buffer);
+			that->write_buffer_queue_.push(std::move(local_buffer));
 
 			if (!write_flag) {
 				that->WriteMsg();

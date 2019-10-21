@@ -14,10 +14,10 @@ namespace Sirius::LoginServer::System {
 	}
 
 	void NetworkSystem::update(double delta, entt::registry &registry) {
-		auto view = registry.view<Component::Session, Component::LoginStatus>();
+		auto view = registry.view<Component::Session>();
 
 		for (auto entity: view) {
-			Component::Session &session = view.get<Component::Session>(entity);
+			Component::Session &session = view.get(entity);
 
 			if (session.session_->WorkFine()) {
 				HandleMessage(session, registry);
@@ -47,7 +47,7 @@ namespace Sirius::LoginServer::System {
 				auto &delegate = view.raw()->delegate_map_[cmd];
 
 				if (delegate) {
-					delegate(registry, buffer);
+					delegate(session, buffer, registry);
 				}
 			} else {
 				break;

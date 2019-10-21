@@ -8,6 +8,7 @@
 #include <Sirius/Common/TcpSession.hpp>
 #include <Sirius/Common/MessageBuffer.hpp>
 #include <Sirius/Server/LoginServer/Game/Network/MessageReader.h>
+#include <Sirius/Server/LoginServer/Game/AuthStatus.h>
 
 #include <queue>
 #include <string>
@@ -20,6 +21,7 @@ namespace Sirius::LoginServer {
 namespace Sirius::LoginServer::Component {
 
 	struct Session {
+		AuthStatus status;
 		std::shared_ptr<Sirius::TcpSession<Game::MessageReader, Sirius::LoginServer::App>> session_;
 		std::queue<MessageBuffer> write_buffer_queue_;
 	};

@@ -5,13 +5,14 @@
 #pragma  once
 
 #include <Sirius/Server/LoginServer/Game/Network/Protocol.h>
+#include <Sirius/Server/LoginServer/Component/Session.h>
 
 #include <entt/entt.hpp>
 #include <unordered_map>
 
 namespace Sirius::LoginServer::Component {
 	struct RemoteCmdHandlerMap {
-		using call_back_type = entt::delegate<void(entt::registry &registry, MessageBuffer &)>;
-		std::unordered_map<LoginServerCmd, call_back_type> delegate_map_;
+		using _Handler_type = entt::delegate<void(Session & session, MessageBuffer & , entt::registry & registry)>;
+		std::unordered_map<LoginServerCmd, _Handler_type> delegate_map_;
 	};
 }

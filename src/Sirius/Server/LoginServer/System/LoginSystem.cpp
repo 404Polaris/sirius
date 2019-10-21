@@ -16,8 +16,23 @@ namespace Sirius::LoginServer::System {
 		}
 	}
 
-	void LoginSystem::HandleAuthLogonChallenge(entt::registry &registry, MessageBuffer &msg_buffer) {
-		fmt::print("HandleAuthLogonChallenge \n");
+	void LoginSystem::HandleAuthLogonChallenge(Component::Session &session,
+											   MessageBuffer &msg_buffer,
+											   entt::registry &registry) {
+
+		session.status = AuthStatus::kStatusClosed;
+		auto *challenge = reinterpret_cast<S_AuthLogonChallenge_C *>(msg_buffer.Data());
+		std::string account((char const *) challenge->i, challenge->i_len);
+		uint16_t build = challenge->build;
+
+		MessageBuffer pkt{3};
+		pkt.Data()[0] = (std::byte) LoginServerCmd::kAuthLogonChallenge;
+		pkt.Data()[1] = (std::byte) 0x00;
+		pkt.Data()[2] = (std::byte) 0x04;
+		pkt.Write(3);
+
+		session.write_buffer_queue_.push(std::move(pkt));
+		fmt::print("HandleAuthLogonChallenge: {0} {1} \n", account, build);
 	}
 }
 

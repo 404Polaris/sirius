@@ -11,7 +11,6 @@
 #include <Sirius/Server/LoginServer/System/SystemBase.hpp>
 #include <Sirius/Server/LoginServer/System/LoginSystem.h>
 #include <Sirius/Server/LoginServer/System/NetworkSystem.h>
-#include <Sirius/Server/LoginServer/Component/LoginStatus.h>
 #include <Sirius/Server/LoginServer/Game/Network/MessageReader.h>
 
 #include <chrono>
@@ -87,8 +86,7 @@ namespace Sirius::LoginServer {
 	inline void App::OnConnect(const std::shared_ptr<_Session_type> &session) {
 		auto entity = registry_.create();
 		session->RegisterEnv(shared_from_this());
-		registry_.assign<Component::Session>(entity, session);
-		registry_.assign<Component::LoginStatus>(entity, Component::AuthStatus::kStatusChallenge);
+		registry_.assign<Component::Session>(entity, AuthStatus::kStatusClosed, session);
 	}
 }
 
