@@ -39,6 +39,7 @@ namespace Sirius {
 		~TcpSession();
 	public:
 		void Start();
+		void Close();
 		bool WorkFine();
 		void Write(MessageBuffer buffer);
 		std::optional<MessageBuffer> Read();
@@ -64,6 +65,11 @@ namespace Sirius {
 		work_fine_ = true;
 		reader_.Init();
 		ReadMsg();
+	}
+
+	template<typename _Msg_reader_type, typename _Env_type>
+	void TcpSession<_Msg_reader_type, _Env_type>::Close() {
+		work_fine_ = false;
 	}
 
 	template<typename _Msg_reader_type, typename _Env_type>

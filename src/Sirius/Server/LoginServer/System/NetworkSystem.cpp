@@ -22,6 +22,8 @@ namespace Sirius::LoginServer::System {
 			if (session.session_->WorkFine()) {
 				HandleMessage(session, registry);
 				WriteMessage(session);
+			} else {
+				registry.destroy(entity);
 			}
 		}
 	}
