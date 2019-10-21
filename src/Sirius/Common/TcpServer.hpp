@@ -22,8 +22,8 @@ namespace Sirius {
 		using tcp = asio::ip::tcp;
 	}
 
-	template<typename _session_type, typename _env_type>
-	class TcpServer : public EnableSiriusEnv<_env_type>,
+	template<typename _Session_type, typename _Env_type>
+	class TcpServer : public EnableSiriusEnv<_Env_type>,
 					  public NoCopyAble {
 	protected:
 		std::atomic_bool running_;
@@ -39,14 +39,14 @@ namespace Sirius {
 		void Accept();
 	};
 
-	template<typename _session_type, typename _env_type>
-	inline TcpServer<_session_type, _env_type>::TcpServer(unsigned short port) :
+	template<typename _Session_type, typename _Env_type>
+	inline TcpServer<_Session_type, _Env_type>::TcpServer(unsigned short port) :
 		running_(false),
 		acceptor_(io_context_, net_lib::tcp::endpoint(net_lib::tcp::v4(), static_cast<unsigned short>(port))) {
 	}
 
-	template<typename _session_type, typename _env_type>
-	inline void TcpServer<_session_type, _env_type>::Start() {
+	template<typename _Session_type, typename _Env_type>
+	inline void TcpServer<_Session_type, _Env_type>::Start() {
 		running_ = true;
 
 		Accept();
@@ -58,14 +58,14 @@ namespace Sirius {
 		}
 	}
 
-	template<typename _session_type, typename _env_type>
-	inline void TcpServer<_session_type, _env_type>::Accept() {
+	template<typename _Session_type, typename _Env_type>
+	inline void TcpServer<_Session_type, _Env_type>::Accept() {
 		if (!running_)return;
 
 		acceptor_.async_accept(
 			[this](std::error_code ec, net_lib::tcp::socket socket) {
 				if (!ec) {
-					auto session = std::make_shared<_session_type>(std::move(socket), io_context_);
+					auto session = std::make_shared<_Session_type>(std::move(socket), io_context_);
 					this->Env()->OnConnect(session);
 					session->Start();
 				}
@@ -74,8 +74,8 @@ namespace Sirius {
 			});
 	}
 
-	template<typename _session_type, typename _env_type>
-	inline TcpServer<_session_type, _env_type>::~TcpServer() {
+	template<typename _Session_type, typename _Env_type>
+	inline TcpServer<_Session_type, _Env_type>::~TcpServer() {
 		bool flag = running_;
 		running_ = false;
 

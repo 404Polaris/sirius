@@ -21,7 +21,6 @@ namespace Sirius::LoginServer::Component {
 
 	struct Session {
 		std::shared_ptr<Sirius::TcpSession<Game::MessageReader, Sirius::LoginServer::App>> session_;
-		std::queue<MessageBuffer> read_buffer_queue_;
 		std::queue<MessageBuffer> write_buffer_queue_;
 	};
 }

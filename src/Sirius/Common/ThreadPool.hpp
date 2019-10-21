@@ -21,8 +21,8 @@ namespace sirius {
 		~ThreadPool();
 		explicit ThreadPool(size_t num);
 	public:
-		template<typename task_type>
-		void Post(task_type &&task);
+		template<typename _Task_type>
+		void Post(_Task_type &&task);
 
 		size_t size();
 	};
@@ -35,9 +35,9 @@ namespace sirius {
 
 	}
 
-	template<typename task_type>
-	inline void ThreadPool::Post(task_type &&task) {
-		asio::post(*thread_pool_, std::forward<task_type>(task));
+	template<typename _Task_type>
+	inline void ThreadPool::Post(_Task_type &&task) {
+		asio::post(*thread_pool_, std::forward<_Task_type>(task));
 	}
 
 	inline size_t ThreadPool::Size() {

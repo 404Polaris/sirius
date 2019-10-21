@@ -21,12 +21,12 @@ namespace Sirius::LoginServer {
 
 	class App : public std::enable_shared_from_this<App> {
 	public:
-		using session_type = Sirius::TcpSession<Game::MessageReader, App>;
-		using tcp_server = Sirius::TcpServer<session_type, App>;
+		using _Session_type = Sirius::TcpSession<Game::MessageReader, App>;
+		using _Tcp_server_type = Sirius::TcpServer<_Session_type, App>;
 	private:
 		entt::registry registry_;
 		std::atomic_bool running_;
-		std::unique_ptr<tcp_server> server_;
+		std::unique_ptr<_Tcp_server_type> server_;
 		std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> update_time_;
 	protected:
 		std::vector<std::unique_ptr<_system_::SystemBase>> system_list_;
@@ -40,7 +40,7 @@ namespace Sirius::LoginServer {
 	public:
 		void Start();
 		void Stop();
-		void OnConnect(const std::shared_ptr<session_type> &session);
+		void OnConnect(const std::shared_ptr<_Session_type> &session);
 	};
 
 	inline App::App() : running_(false) {
@@ -84,7 +84,7 @@ namespace Sirius::LoginServer {
 		running_ = false;
 	}
 
-	inline void App::OnConnect(const std::shared_ptr<session_type> &session) {
+	inline void App::OnConnect(const std::shared_ptr<_Session_type> &session) {
 		auto entity = registry_.create();
 		session->RegisterEnv(shared_from_this());
 		registry_.assign<Component::Session>(entity, session);

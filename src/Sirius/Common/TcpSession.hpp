@@ -22,14 +22,14 @@ namespace Sirius {
 		using tcp = asio::ip::tcp;
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	class TcpSession : public std::enable_shared_from_this<TcpSession<_msg_reader_type, _env_type>>,
-					   public EnableSiriusEnv<_env_type>,
+	template<typename _Msg_reader_type, typename _Env_type>
+	class TcpSession : public std::enable_shared_from_this<TcpSession<_Msg_reader_type, _Env_type>>,
+					   public EnableSiriusEnv<_Env_type>,
 					   public NoCopyAble {
 	protected:
 		bool work_fine_;
 		std::mutex read_mutex_;
-		_msg_reader_type reader_;
+		_Msg_reader_type reader_;
 		net_lib::tcp::socket socket_;
 		net_lib::io_context::strand strand_;
 		std::queue<MessageBuffer> read_buffer_queue_;
@@ -48,26 +48,26 @@ namespace Sirius {
 		void ReadMsgComplete();
 	};
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline TcpSession<_msg_reader_type, _env_type>::TcpSession(net_lib::tcp::socket socket,
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline TcpSession<_Msg_reader_type, _Env_type>::TcpSession(net_lib::tcp::socket socket,
 															   net_lib::io_context &io_context)
 		:socket_(std::move(socket)), strand_(io_context), work_fine_(false) {
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline TcpSession<_msg_reader_type, _env_type>::~TcpSession() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline TcpSession<_Msg_reader_type, _Env_type>::~TcpSession() {
 		socket_.close();
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline void TcpSession<_msg_reader_type, _env_type>::Start() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline void TcpSession<_Msg_reader_type, _Env_type>::Start() {
 		work_fine_ = true;
 		reader_.Init();
 		ReadMsg();
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline void TcpSession<_msg_reader_type, _env_type>::ReadMsg() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline void TcpSession<_Msg_reader_type, _Env_type>::ReadMsg() {
 		if (!work_fine_)return;
 
 		auto[no_error, length] = reader_.ShouldRead();
@@ -93,16 +93,16 @@ namespace Sirius {
 						 }));
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	void TcpSession<_msg_reader_type, _env_type>::ReadMsgComplete() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	void TcpSession<_Msg_reader_type, _Env_type>::ReadMsgComplete() {
 		std::lock_guard<std::mutex> lock(read_mutex_);
 
 		auto &&buffer = reader_.PopBuffer();
 		read_buffer_queue_.emplace(std::move(buffer));
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline void TcpSession<_msg_reader_type, _env_type>::WriteMsg() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline void TcpSession<_Msg_reader_type, _Env_type>::WriteMsg() {
 		if (!work_fine_)return;
 
 		auto that = this->shared_from_this();
@@ -122,8 +122,8 @@ namespace Sirius {
 						  }));
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline void TcpSession<_msg_reader_type, _env_type>::Write(MessageBuffer buffer) {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline void TcpSession<_Msg_reader_type, _Env_type>::Write(MessageBuffer buffer) {
 		if (!work_fine_)return;
 
 		auto that = this->shared_from_this();
@@ -138,13 +138,13 @@ namespace Sirius {
 		}));
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	inline bool TcpSession<_msg_reader_type, _env_type>::WorkFine() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	inline bool TcpSession<_Msg_reader_type, _Env_type>::WorkFine() {
 		return work_fine_;
 	}
 
-	template<typename _msg_reader_type, typename _env_type>
-	std::optional<MessageBuffer> TcpSession<_msg_reader_type, _env_type>::Read() {
+	template<typename _Msg_reader_type, typename _Env_type>
+	std::optional<MessageBuffer> TcpSession<_Msg_reader_type, _Env_type>::Read() {
 		std::lock_guard<std::mutex> lock(read_mutex_);
 
 		if (read_buffer_queue_.empty())return std::nullopt;
