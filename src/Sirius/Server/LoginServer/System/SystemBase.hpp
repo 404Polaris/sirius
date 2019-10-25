@@ -10,7 +10,8 @@ namespace Sirius::LoginServer::System {
 
 	class SystemBase {
 	public:
-		virtual void init(entt::registry &registry) {};
-		virtual void update(double delta, entt::registry &registry) {};
+		virtual void Init(entt::registry &registry) {};
+		virtual void Update(double delta, entt::registry &registry) {};
+		virtual void LateUpdate(double delta, entt::registry &registry) {};
 	};
 }

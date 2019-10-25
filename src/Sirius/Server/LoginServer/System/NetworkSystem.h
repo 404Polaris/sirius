@@ -14,8 +14,8 @@ namespace Sirius::LoginServer::System {
 
 	class NetworkSystem : public SystemBase {
 	public:
-		void init(entt::registry &registry) override;
-		void update(double delta, entt::registry &registry) override;
+		void Init(entt::registry &registry) override;
+		void Update(double delta, entt::registry &registry) override;
 	public:
 		static void HandleMessage(Component::Session &session, entt::registry &registry);
 		static void WriteMessage(Component::Session &session);

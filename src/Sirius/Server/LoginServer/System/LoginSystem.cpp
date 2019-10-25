@@ -7,7 +7,7 @@
 
 namespace Sirius::LoginServer::System {
 
-	void LoginSystem::init(entt::registry &registry) {
+	void LoginSystem::Init(entt::registry &registry) {
 		auto view = registry.view<Component::RemoteCmdHandlerMap>();
 
 		if (!view.empty()) {

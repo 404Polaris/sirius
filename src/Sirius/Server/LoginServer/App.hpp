@@ -61,7 +61,7 @@ namespace Sirius::LoginServer {
 			auto delta = std::chrono::steady_clock::now() - update_time_;
 
 			for (auto &s : system_list_) {
-				s->update(delta.count() * 1.0 / 10E9, registry_);
+				s->Update(delta.count() * 1.0 / 10E9, registry_);
 			}
 
 			update_time_ = std::chrono::steady_clock::now();
@@ -70,7 +70,7 @@ namespace Sirius::LoginServer {
 
 	inline void App::InitSystem() {
 		for (auto &s : system_list_) {
-			s->init(registry_);
+			s->Init(registry_);
 		}
 	}
 

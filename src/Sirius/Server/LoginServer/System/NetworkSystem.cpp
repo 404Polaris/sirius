@@ -8,12 +8,12 @@
 #include <Sirius/Server/LoginServer/App.hpp>
 
 namespace Sirius::LoginServer::System {
-	void NetworkSystem::init(entt::registry &registry) {
+	void NetworkSystem::Init(entt::registry &registry) {
 		auto entity = registry.create();
 		registry.assign<Component::RemoteCmdHandlerMap>(entity);
 	}
 
-	void NetworkSystem::update(double delta, entt::registry &registry) {
+	void NetworkSystem::Update(double delta, entt::registry &registry) {
 		auto view = registry.view<Component::Session>();
 
 		for (auto entity: view) {
