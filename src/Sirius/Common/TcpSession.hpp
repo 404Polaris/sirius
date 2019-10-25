@@ -103,7 +103,7 @@ namespace Sirius {
 	void TcpSession<_Msg_reader_type, _Env_type>::ReadMsgComplete() {
 		std::lock_guard<std::mutex> lock(read_mutex_);
 
-		auto &&buffer = reader_.PopBuffer();
+		auto buffer = reader_.PopBuffer();
 		read_buffer_queue_.emplace(std::move(buffer));
 	}
 
