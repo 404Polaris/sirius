@@ -5,6 +5,8 @@
 #include <Sirius/Server/LoginServer/System/LoginSystem.h>
 #include <Sirius/Server/LoginServer/Component/RemoteCmdHandlerMap.h>
 
+#include <FaceMySql/FaceMySql.hpp>
+
 namespace Sirius::LoginServer::System {
 
 	void LoginSystem::Init(entt::registry &registry) {

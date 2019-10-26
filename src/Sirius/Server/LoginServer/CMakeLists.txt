@@ -7,7 +7,6 @@ set(source_file_list
         System/NetworkSystem.cpp
         System/LoginSystem.cpp)
 
-message(${source_file_list})
 add_executable(LoginServer ${source_file_list})
 target_link_libraries(LoginServer PUBLIC EnTT fmt::fmt fmt::fmt-header-only pthread)
 
