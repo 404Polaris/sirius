@@ -2,7 +2,7 @@
 // Created by 404Polaris on 2019/10/15.
 //
 
-#include <Sirius/Server/LoginServer/App.hpp>
+#include <Sirius/Server/LoginServer/App.h>
 #include <iostream>
 
 int main() {

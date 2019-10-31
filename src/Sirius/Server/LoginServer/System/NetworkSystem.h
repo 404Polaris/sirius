@@ -14,10 +14,10 @@ namespace Sirius::LoginServer::System {
 
 	class NetworkSystem : public SystemBase {
 	public:
-		void Init(entt::registry &registry) override;
-		void Update(double delta, entt::registry &registry) override;
+		void Init(App &app) override;
+		void Update(double delta, App &app) override;
 	public:
-		static void HandleMessage(Component::Session &session, entt::registry &registry);
+		static void HandleMessage(Component::Session &session, App &app);
 		static void WriteMessage(Component::Session &session);
 	};
 }

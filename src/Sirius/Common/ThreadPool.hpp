@@ -9,12 +9,14 @@
 
 #include <asio.hpp>
 #include <memory>
+#include <atomic>
 #include <fmt/format.h>
 
-namespace sirius {
+namespace Sirius {
 	class ThreadPool : NoCopyAble {
 	protected:
 		const size_t thread_num_;
+		std::atomic_bool running_;
 		std::unique_ptr<asio::thread_pool> thread_pool_;
 	public:
 		ThreadPool();
@@ -23,11 +25,11 @@ namespace sirius {
 	public:
 		template<typename _Task_type>
 		void Post(_Task_type &&task);
-
-		size_t size();
+		void Stop();
+		size_t Size();
 	};
 
-	inline ThreadPool::ThreadPool(size_t num) : thread_num_(num) {
+	inline ThreadPool::ThreadPool(size_t num) : thread_num_(num), running_(true) {
 		thread_pool_ = std::make_unique<asio::thread_pool>(num);
 	}
 
@@ -37,6 +39,7 @@ namespace sirius {
 
 	template<typename _Task_type>
 	inline void ThreadPool::Post(_Task_type &&task) {
+		if (!running_)return;
 		asio::post(*thread_pool_, std::forward<_Task_type>(task));
 	}
 
@@ -44,10 +47,15 @@ namespace sirius {
 		return thread_num_;
 	}
 
-	inline ThreadPool::~thread_pool() {
+	inline ThreadPool::~ThreadPool() {
+		Stop();
+		thread_pool_.reset();
+	}
+
+	inline void ThreadPool::Stop() {
+		running_ = false;
 		thread_pool_->stop();
 		thread_pool_->join();
-		thread_pool_.reset();
 	}
 }
 

@@ -12,7 +12,7 @@
 
 namespace Sirius::LoginServer::Component {
 	struct RemoteCmdHandlerMap {
-		using _Handler_type = entt::delegate<void(Session & session, MessageBuffer & , entt::registry & registry)>;
+		using _Handler_type = entt::delegate<void(Session & , App & , MessageBuffer & )>;
 		std::unordered_map<LoginServerCmd, _Handler_type> delegate_map_;
 	};
 }

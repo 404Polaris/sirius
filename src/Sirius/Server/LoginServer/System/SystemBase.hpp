@@ -5,13 +5,21 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <Sirius/Common/ThreadPool.hpp>
+
+namespace Sirius::LoginServer {
+	class App;
+}
 
 namespace Sirius::LoginServer::System {
 
 	class SystemBase {
 	public:
-		virtual void Init(entt::registry &registry) {};
-		virtual void Update(double delta, entt::registry &registry) {};
-		virtual void LateUpdate(double delta, entt::registry &registry) {};
+		template<typename _Task_type>
+		void AsyncRun(_Task_type &&task) {}
+	public:
+		virtual void Init(App &app) {};
+		virtual void Update(double delta, App &app) {};
+		virtual void LateUpdate(double delta, App &app) {};
 	};
 }

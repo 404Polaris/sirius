@@ -11,11 +11,9 @@
 namespace Sirius::LoginServer::System {
 	class LoginSystem : public SystemBase {
 	public:
-		void Init(entt::registry &registry) override;
+		void Init(App &app) override;
 	private:
-		static void HandleAuthLogonChallenge(Component::Session &session,
-											 MessageBuffer &msg_buffer,
-											 entt::registry &registry);
+		void HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer);
 	};
 }
 

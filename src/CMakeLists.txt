@@ -3,5 +3,4 @@ project(Sirius)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(FaceMySql)
 add_subdirectory(Sirius/Server)

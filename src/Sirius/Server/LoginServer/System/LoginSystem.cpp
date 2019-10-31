@@ -4,23 +4,21 @@
 
 #include <Sirius/Server/LoginServer/System/LoginSystem.h>
 #include <Sirius/Server/LoginServer/Component/RemoteCmdHandlerMap.h>
-
-#include <FaceMySql/FaceMySql.hpp>
+#include <Sirius/Server/LoginServer/App.h>
 
 namespace Sirius::LoginServer::System {
 
-	void LoginSystem::Init(entt::registry &registry) {
+	void LoginSystem::Init(App &app) {
+		auto &registry = app.GetRegistry();
 		auto view = registry.view<Component::RemoteCmdHandlerMap>();
 
 		if (!view.empty()) {
 			auto &delegate_map = view.raw()->delegate_map_;
-			delegate_map[LoginServerCmd::kAuthLogonChallenge].connect<&LoginSystem::HandleAuthLogonChallenge>();
+			delegate_map[LoginServerCmd::kAuthLogonChallenge].connect<&LoginSystem::HandleAuthLogonChallenge>(*this);
 		}
 	}
 
-	void LoginSystem::HandleAuthLogonChallenge(Component::Session &session,
-											   MessageBuffer &msg_buffer,
-											   entt::registry &registry) {
+	void LoginSystem::HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer) {
 
 		session.status = AuthStatus::kStatusClosed;
 		auto *challenge = reinterpret_cast<S_AuthLogonChallenge_C *>(msg_buffer.Data());
@@ -33,7 +31,7 @@ namespace Sirius::LoginServer::System {
 		pkt.Data()[2] = (std::byte) 0x04;
 		pkt.Write(3);
 
-		session.write_buffer_queue_.push(std::move(pkt));
+		session.session_->Write(std::move(pkt));
 		fmt::print("HandleAuthLogonChallenge: {0} {1} \n", account, build);
 	}
 }
