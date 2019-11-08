@@ -36,7 +36,7 @@ namespace Sirius::LoginServer::System {
 		if (view.empty())return;
 
 		while (true) {
-			auto &&opt = session.session_->Read();
+			auto opt = session.session_->Read();
 
 			if (opt) {
 				auto buffer = std::move(opt.value());
@@ -44,9 +44,7 @@ namespace Sirius::LoginServer::System {
 				auto &delegate = view.raw()->delegate_map_[cmd];
 
 				if (delegate) {
-					app.Async([&, moved_buffer(std::move(buffer))]() mutable {
-						delegate(session, app, moved_buffer);
-					});
+					delegate(session, app, buffer);
 				}
 			} else {
 				break;

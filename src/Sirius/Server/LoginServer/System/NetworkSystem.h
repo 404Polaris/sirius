@@ -18,7 +18,6 @@ namespace Sirius::LoginServer::System {
 		void Update(double delta, App &app) override;
 	public:
 		static void HandleMessage(Component::Session &session, App &app);
-		static void WriteMessage(Component::Session &session);
 	};
 }
 

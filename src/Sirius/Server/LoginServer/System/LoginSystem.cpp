@@ -14,12 +14,11 @@ namespace Sirius::LoginServer::System {
 
 		if (!view.empty()) {
 			auto &delegate_map = view.raw()->delegate_map_;
-			delegate_map[LoginServerCmd::kAuthLogonChallenge].connect<&LoginSystem::HandleAuthLogonChallenge>(*this);
+			delegate_map[LoginServerCmd::kAuthLogonChallenge].connect<&LoginSystem::HandleAuthLogonChallenge>();
 		}
 	}
 
 	void LoginSystem::HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer) {
-
 		session.status = AuthStatus::kStatusClosed;
 		auto *challenge = reinterpret_cast<S_AuthLogonChallenge_C *>(msg_buffer.Data());
 		std::string account((char const *) challenge->i, challenge->i_len);

@@ -13,7 +13,7 @@ namespace Sirius::LoginServer::System {
 	public:
 		void Init(App &app) override;
 	private:
-		void HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer);
+		static void HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer);
 	};
 }
 

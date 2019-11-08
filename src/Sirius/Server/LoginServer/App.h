@@ -7,6 +7,7 @@
 
 #include <entt/entt.hpp>
 #include <Sirius/Common/TcpServer.hpp>
+#include <Sirius/Common/ActionQueue.hpp>
 #include <Sirius/Server/LoginServer/Component/Session.h>
 #include <Sirius/Server/LoginServer/System/SystemBase.hpp>
 #include <Sirius/Server/LoginServer/System/LoginSystem.h>
@@ -25,9 +26,11 @@ namespace Sirius::LoginServer {
 	private:
 		ThreadPool thread_pool_;
 		entt::registry registry_;
+		ActionQueue action_queue_;
 		std::atomic_bool running_;
 		std::unique_ptr<_Tcp_server_type> server_;
 		std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> update_time_;
+		std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> late_update_time_;
 	protected:
 		std::vector<std::unique_ptr<_system_::SystemBase>> system_list_;
 	public:
@@ -35,8 +38,9 @@ namespace Sirius::LoginServer {
 		~App();
 	private:
 		void InitSystem();
-		void UpdateSystem();
 		void CreateSystem();
+		void Update();
+		void LateUpdate();
 	public:
 		void Stop();
 		void Start();
@@ -48,6 +52,13 @@ namespace Sirius::LoginServer {
 		void Async(_Task_type &&task) {
 			thread_pool_.Post(std::forward<_Task_type>(task));
 		}
+
+		template<typename _Task_type>
+		void Sync(_Task_type &&task) {
+			action_queue_.Push(std::forward<_Task_type>(task));
+		}
+
+		void MainLoop();
 	};
 }
 
