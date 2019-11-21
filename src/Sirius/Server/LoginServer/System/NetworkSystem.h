@@ -6,9 +6,8 @@
 #pragma once
 
 #include <Sirius/Server/LoginServer/System/SystemBase.hpp>
-
-#include <fmt/format.h>
 #include <Sirius/Server/LoginServer/Component/Session.h>
+#include <fmt/format.h>
 
 namespace Sirius::LoginServer::System {
 

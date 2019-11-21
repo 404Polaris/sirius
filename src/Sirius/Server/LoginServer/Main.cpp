@@ -4,6 +4,7 @@
 
 #include <Sirius/Server/LoginServer/App.h>
 #include <Sirius/Common/Timer.hpp>
+#include <Sirius/Common/Database/MySqlDatabase.hpp>
 #include <iostream>
 
 int main() {
