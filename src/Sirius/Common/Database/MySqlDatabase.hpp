@@ -16,27 +16,27 @@ namespace Sirius::Database {
 		std::string password_;
 		std::string pool_size_;
 	public:
-		auto GetDB() {
+		[[nodiscard]] auto GetDB() const {
 			return db_.c_str();
 		}
 
-		auto GetHost() {
+		[[nodiscard]] auto GetHost() const {
 			return host_.c_str();
 		}
 
-		auto GetPort() {
+		[[nodiscard]] auto GetPort() const {
 			return std::stoul(port_);
 		}
 
-		auto GetUser() {
+		[[nodiscard]] auto GetUser() const {
 			return user_.c_str();
 		}
 
-		auto GetPassword() {
+		[[nodiscard]] auto GetPassword() const {
 			return password_.c_str();
 		}
 
-		auto GetPoolSize() {
+		[[nodiscard]] auto GetPoolSize() const {
 			return std::stoul(pool_size_);
 		}
 	};
@@ -85,7 +85,14 @@ namespace Sirius::Database {
 	};
 
 	class MySqlDatabase {
+	public:
 		using Config_type = MySqlConfig;
 		using Connection_type = MySqlConnection;
+	public:
+		ConnectionPool<MySqlDatabase> connection_pool_;
+	public:
+		explicit MySqlDatabase(const Config_type &config) : connection_pool_(config) {
+			connection_pool_.Connect();
+		}
 	};
 }

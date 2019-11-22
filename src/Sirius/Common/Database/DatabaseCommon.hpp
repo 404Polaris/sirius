@@ -74,8 +74,8 @@ namespace Sirius {
 		std::vector<std::shared_ptr<Connection_type>> connections_;
 	public:
 		explicit ConnectionPool(Config_type config) :
-			pool_size_(config.GetPoolSize()),
-			config_(std::move(config)) {
+			config_(std::move(config)),
+			pool_size_(config_.GetPoolSize()) {
 		}
 
 		ConnectionPool(ConnectionPool &&o) noexcept
@@ -91,10 +91,10 @@ namespace Sirius {
 			return *this;
 		}
 	public:
-		void Connect(size_t pool_size) {
+		void Connect() {
 			connections_.clear();
 
-			for (size_t i = 0; i < pool_size; i++) {
+			for (size_t i = 0; i < pool_size_; i++) {
 				connections_.push_back(std::make_shared<Connection_type>(config_));
 			}
 		}

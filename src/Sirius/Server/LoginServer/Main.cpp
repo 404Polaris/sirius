@@ -11,6 +11,8 @@ int main() {
 	auto app = std::make_shared<Sirius::LoginServer::App>();
 	app->Start();
 
+	Sirius::Database::MySqlDatabase mysql({"world", "127.0.0.1", "3306", "root", "root", "256"});
+
 	char ch;
 	std::cin >> ch;
 

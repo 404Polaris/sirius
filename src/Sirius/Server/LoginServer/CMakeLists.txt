@@ -8,6 +8,6 @@ set(source_file_list
         System/LoginSystem.cpp App.cpp ../../Common/Timer.hpp)
 
 add_executable(LoginServer ${source_file_list})
-target_link_libraries(LoginServer PUBLIC EnTT fmt::fmt fmt::fmt-header-only pthread)
+target_link_libraries(LoginServer PUBLIC EnTT fmt::fmt fmt::fmt-header-only pthread mysqlclient)
 
 set(CMAKE_CXX_STANDARD 17)
