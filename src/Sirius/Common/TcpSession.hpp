@@ -52,7 +52,7 @@ namespace Sirius {
 	template<typename _Msg_reader_type, typename _Env_type>
 	inline TcpSession<_Msg_reader_type, _Env_type>::TcpSession(net_lib::tcp::socket socket,
 															   net_lib::io_context &io_context)
-		:socket_(std::move(socket)), strand_(io_context), work_fine_(false) {
+		: work_fine_(false), socket_(std::move(socket)), strand_(io_context) {
 	}
 
 	template<typename _Msg_reader_type, typename _Env_type>

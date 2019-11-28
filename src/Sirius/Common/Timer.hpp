@@ -90,7 +90,7 @@ namespace Sirius {
 	public:
 		void Start() {
 			running_ = true;
-			thread_ = std::move(std::thread([this]() { InternalLoop(); }));
+			thread_ = std::thread([this]() { InternalLoop(); });
 		}
 
 		void Stop() {

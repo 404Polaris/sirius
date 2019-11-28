@@ -76,11 +76,11 @@ namespace Sirius::LoginServer::Game {
 
 	inline MessageBuffer MessageReader::PopBuffer() {
 		auto buffer = std::move(buffer_);
-		return std::move(buffer);
+		return buffer;
 	}
 
 	inline void MessageReader::Init() {
-		buffer_ = std::move(MessageBuffer(cmd_size_));
+		buffer_ = MessageBuffer(cmd_size_);
 	}
 }
 

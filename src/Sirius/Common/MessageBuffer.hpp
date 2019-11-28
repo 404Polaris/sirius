@@ -49,8 +49,8 @@ namespace Sirius {
 		return *this;
 	}
 
-	inline MessageBuffer::MessageBuffer(MessageBuffer &&other) noexcept : buffer_(std::move((other.buffer_))),
-																		  size_(other.size_) {
+	inline MessageBuffer::MessageBuffer(MessageBuffer &&other) noexcept : size_(other.size_),
+																		  buffer_(std::move((other.buffer_))) {
 		other.size_ = 0;
 	}
 
@@ -71,7 +71,7 @@ namespace Sirius {
 		return Data() + size_;
 	}
 
-	inline MessageBuffer::MessageBuffer(const MessageBuffer &other) : buffer_(other.buffer_), size_(other.size_) {
+	inline MessageBuffer::MessageBuffer(const MessageBuffer &other) : size_(other.size_), buffer_(other.buffer_) {
 		fmt::print("Copy Construct.");
 	}
 

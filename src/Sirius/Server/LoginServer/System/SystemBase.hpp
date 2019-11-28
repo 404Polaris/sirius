@@ -21,5 +21,7 @@ namespace Sirius::LoginServer::System {
 		virtual void Init(App &app) {};
 		virtual void Update(double delta, App &app) {};
 		virtual void LateUpdate(double delta, App &app) {};
+	public:
+		virtual ~ SystemBase() = default;
 	};
 }
