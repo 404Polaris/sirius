@@ -4,13 +4,13 @@
 
 #pragma  once
 
-#include <Sirius/Server/LoginServer/Game/Network/Protocol.h>
-#include <Sirius/Server/LoginServer/Component/Session.h>
+#include <Yoa/Server/LoginServer/Game/Network/Protocol.h>
+#include <Yoa/Server/LoginServer/Component/Session.h>
 
 #include <entt/entt.hpp>
 #include <unordered_map>
 
-namespace Sirius::LoginServer::Component {
+namespace Yoa::LoginServer::Component {
 	struct RemoteCmdHandlerMap {
 		using _Handler_type = entt::delegate<void(Session & , App & , MessageBuffer & )>;
 		std::unordered_map<LoginServerCmd, _Handler_type> delegate_map_;

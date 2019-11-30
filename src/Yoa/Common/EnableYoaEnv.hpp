@@ -7,15 +7,15 @@
 
 #include <memory>
 
-namespace Sirius {
+namespace Yoa {
 
 	template<typename _Env_type>
-	class EnableSiriusEnv {
+	class EnableYoaEnv {
 	private:
 		std::weak_ptr<_Env_type> env_;
 	public:
-		EnableSiriusEnv() = default;
-		~EnableSiriusEnv() = default;
+		EnableYoaEnv() = default;
+		~EnableYoaEnv() = default;
 	public:
 		void RegisterEnv(const std::shared_ptr<_Env_type> &env);
 	protected:
@@ -23,12 +23,12 @@ namespace Sirius {
 	};
 
 	template<typename _Env_type>
-	inline void EnableSiriusEnv<_Env_type>::RegisterEnv(const std::shared_ptr<_Env_type> &env) {
+	inline void EnableYoaEnv<_Env_type>::RegisterEnv(const std::shared_ptr<_Env_type> &env) {
 		this->env_ = env;
 	}
 
 	template<typename _Env_type>
-	inline std::shared_ptr<_Env_type> EnableSiriusEnv<_Env_type>::Env() {
+	inline std::shared_ptr<_Env_type> EnableYoaEnv<_Env_type>::Env() {
 		if (auto ptr = env_.lock();ptr != nullptr) {
 			return ptr;
 		}

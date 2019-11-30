@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include <Sirius/Server/LoginServer/System/SystemBase.hpp>
-#include <Sirius/Server/LoginServer/Component/Session.h>
+#include <Yoa/Server/LoginServer/System/SystemBase.hpp>
+#include <Yoa/Server/LoginServer/Component/Session.h>
 #include <fmt/format.h>
 
-namespace Sirius::LoginServer::System {
+namespace Yoa::LoginServer::System {
 
 	class NetworkSystem : public SystemBase {
 	public:

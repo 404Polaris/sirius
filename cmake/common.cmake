@@ -1,4 +1,4 @@
-macro(sirius_subdir result curdir)
+macro(yoa_subdir result curdir)
     FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
     SET(dirlist "")
     foreach (child ${children})

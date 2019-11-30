@@ -6,23 +6,23 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include <Sirius/Common/TcpServer.hpp>
-#include <Sirius/Common/ActionQueue.hpp>
-#include <Sirius/Server/LoginServer/Component/Session.h>
-#include <Sirius/Server/LoginServer/System/SystemBase.hpp>
-#include <Sirius/Server/LoginServer/System/LoginSystem.h>
-#include <Sirius/Server/LoginServer/System/NetworkSystem.h>
-#include <Sirius/Server/LoginServer/Game/Network/MessageReader.h>
+#include <Yoa/Common/TcpServer.hpp>
+#include <Yoa/Common/ActionQueue.hpp>
+#include <Yoa/Server/LoginServer/Component/Session.h>
+#include <Yoa/Server/LoginServer/System/SystemBase.hpp>
+#include <Yoa/Server/LoginServer/System/LoginSystem.h>
+#include <Yoa/Server/LoginServer/System/NetworkSystem.h>
+#include <Yoa/Server/LoginServer/Game/Network/MessageReader.h>
 
 #include <chrono>
 
-namespace Sirius::LoginServer {
-	namespace _system_ = Sirius::LoginServer::System;
+namespace Yoa::LoginServer {
+	namespace _system_ = Yoa::LoginServer::System;
 
 	class App : public std::enable_shared_from_this<App> {
 	public:
-		using _Session_type = Sirius::TcpSession<Game::MessageReader, App>;
-		using _Tcp_server_type = Sirius::TcpServer<_Session_type, App>;
+		using _Session_type = Yoa::TcpSession<Game::MessageReader, App>;
+		using _Tcp_server_type = Yoa::TcpServer<_Session_type, App>;
 	private:
 		ThreadPool thread_pool_;
 		entt::registry registry_;

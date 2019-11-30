@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <Sirius/Common/NoCopyAble.hpp>
-#include <Sirius/Common/MessageBuffer.hpp>
-#include <Sirius/Server/LoginServer/Game/Network/Protocol.h>
+#include <Yoa/Common/NoCopyAble.hpp>
+#include <Yoa/Common/MessageBuffer.hpp>
+#include <Yoa/Server/LoginServer/Game/Network/Protocol.h>
 
 #include <vector>
 #include <cstddef>
@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <fmt/format.h>
 
-namespace Sirius::LoginServer::Game {
+namespace Yoa::LoginServer::Game {
 
 	class MessageReader : public NoCopyAble {
 	protected:
@@ -28,7 +28,7 @@ namespace Sirius::LoginServer::Game {
 		MessageBuffer PopBuffer();
 		std::tuple<bool, size_t> ShouldRead();
 	protected:
-		template<typename msg_type>
+		template<typename Msg_type>
 		std::tuple<bool, size_t> Check();
 	};
 
@@ -36,9 +36,9 @@ namespace Sirius::LoginServer::Game {
 		return buffer_.Tail();
 	}
 
-	template<typename msg_type>
+	template<typename Msg_type>
 	inline std::tuple<bool, size_t> MessageReader::Check() {
-		const auto message_size = sizeof(msg_type);
+		constexpr auto message_size = sizeof(Msg_type);
 
 		std::tuple<bool, size_t> result{true, message_size - buffer_.Size()};
 

@@ -2,12 +2,12 @@
 // Created by 404Polaris on 2019/10/15.
 //
 
-#include <Sirius/Server/LoginServer/System/NetworkSystem.h>
-#include <Sirius/Server/LoginServer/Component/Session.h>
-#include <Sirius/Server/LoginServer/Component/RemoteCmdHandlerMap.h>
-#include <Sirius/Server/LoginServer/App.h>
+#include <Yoa/Server/LoginServer/System/NetworkSystem.h>
+#include <Yoa/Server/LoginServer/Component/Session.h>
+#include <Yoa/Server/LoginServer/Component/RemoteCmdHandlerMap.h>
+#include <Yoa/Server/LoginServer/App.h>
 
-namespace Sirius::LoginServer::System {
+namespace Yoa::LoginServer::System {
 	void NetworkSystem::Init(App &app) {
 		auto &registry = app.GetRegistry();
 		auto entity = registry.create();

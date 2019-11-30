@@ -5,14 +5,14 @@
 
 #pragma once
 
-#include <Sirius/Common/NoCopyAble.hpp>
+#include <Yoa/Common/NoCopyAble.hpp>
 
 #include <asio.hpp>
 #include <memory>
 #include <atomic>
 #include <fmt/format.h>
 
-namespace Sirius {
+namespace Yoa {
 	class ThreadPool : NoCopyAble {
 	protected:
 		const size_t thread_num_;

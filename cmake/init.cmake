@@ -2,6 +2,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/module)
 
+find_package(sol2 CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)

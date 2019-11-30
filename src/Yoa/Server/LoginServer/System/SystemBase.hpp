@@ -5,13 +5,13 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include <Sirius/Common/ThreadPool.hpp>
+#include <Yoa/Common/ThreadPool.hpp>
 
-namespace Sirius::LoginServer {
+namespace Yoa::LoginServer {
 	class App;
 }
 
-namespace Sirius::LoginServer::System {
+namespace Yoa::LoginServer::System {
 
 	class SystemBase {
 	public:

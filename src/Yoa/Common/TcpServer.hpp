@@ -9,13 +9,13 @@
 #define ASIO_STANDALONE
 #endif
 
-#include <Sirius/Common/NoCopyAble.hpp>
-#include <Sirius/Common/TcpSession.hpp>
-#include <Sirius/Common/EnableSiriusEnv.hpp>
+#include <Yoa/Common/NoCopyAble.hpp>
+#include <Yoa/Common/TcpSession.hpp>
+#include <Yoa/Common/EnableYoaEnv.hpp>
 
 #include <asio.hpp>
 
-namespace Sirius {
+namespace Yoa {
 
 	namespace net_lib {
 		using namespace asio;
@@ -23,7 +23,7 @@ namespace Sirius {
 	}
 
 	template<typename _Session_type, typename _Env_type>
-	class TcpServer : public EnableSiriusEnv<_Env_type>,
+	class TcpServer : public EnableYoaEnv<_Env_type>,
 					  public NoCopyAble {
 	protected:
 		std::atomic_bool running_;

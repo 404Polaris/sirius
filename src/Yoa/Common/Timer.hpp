@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Sirius/Common/NoCopyAble.hpp>
+#include <Yoa/Common/NoCopyAble.hpp>
 
 #include <queue>
 #include <memory>
@@ -12,7 +12,7 @@
 #include <functional>
 #include <type_traits>
 
-namespace Sirius {
+namespace Yoa {
 
 	class Timer : NoCopyAble {
 		using _Time_point_type = std::chrono::steady_clock::time_point;

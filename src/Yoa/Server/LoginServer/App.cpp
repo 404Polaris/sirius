@@ -2,10 +2,10 @@
 // Created by 404Polaris on 2019/10/31.
 //
 
-#include <Sirius/Server/LoginServer/App.h>
-#include <Sirius/Common/Timer.hpp>
+#include <Yoa/Server/LoginServer/App.h>
+#include <Yoa/Common/Timer.hpp>
 
-namespace Sirius::LoginServer {
+namespace Yoa::LoginServer {
 
 	App::App() : running_(false) {
 		update_time_ = std::chrono::steady_clock::now();

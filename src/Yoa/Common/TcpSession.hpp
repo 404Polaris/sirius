@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <Sirius/Common/NoCopyAble.hpp>
-#include <Sirius/Common/EnableSiriusEnv.hpp>
-#include <Sirius/Common/MessageBuffer.hpp>
+#include <Yoa/Common/NoCopyAble.hpp>
+#include <Yoa/Common/EnableYoaEnv.hpp>
+#include <Yoa/Common/MessageBuffer.hpp>
 
 #include <queue>
 #include <mutex>
@@ -16,7 +16,7 @@
 #include <optional>
 #include <asio.hpp>
 
-namespace Sirius {
+namespace Yoa {
 	namespace net_lib {
 		using namespace asio;
 		using tcp = asio::ip::tcp;
@@ -24,7 +24,7 @@ namespace Sirius {
 
 	template<typename _Msg_reader_type, typename _Env_type>
 	class TcpSession : public std::enable_shared_from_this<TcpSession<_Msg_reader_type, _Env_type>>,
-					   public EnableSiriusEnv<_Env_type>,
+					   public EnableYoaEnv<_Env_type>,
 					   public NoCopyAble {
 	protected:
 		bool work_fine_;

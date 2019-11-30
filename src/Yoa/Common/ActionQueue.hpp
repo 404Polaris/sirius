@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <Sirius/Common/NoCopyAble.hpp>
+#include <Yoa/Common/NoCopyAble.hpp>
 #include <queue>
 #include <mutex>
 #include <optional>
 #include <functional>
 
-namespace Sirius {
+namespace Yoa {
 	class ActionQueue : public NoCopyAble {
 		using Action_type = std::function<void()>;
 	private:

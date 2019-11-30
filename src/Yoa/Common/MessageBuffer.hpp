@@ -9,7 +9,7 @@
 
 #include <fmt/format.h>
 
-namespace Sirius {
+namespace Yoa {
 	class MessageBuffer {
 	private:
 		size_t size_ = 0;

@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <Sirius/Server/LoginServer/System/SystemBase.hpp>
-#include <Sirius/Server/LoginServer/Component/Session.h>
-#include <Sirius/Common/MessageBuffer.hpp>
+#include <Yoa/Server/LoginServer/System/SystemBase.hpp>
+#include <Yoa/Server/LoginServer/Component/Session.h>
+#include <Yoa/Common/MessageBuffer.hpp>
 
-namespace Sirius::LoginServer::System {
+namespace Yoa::LoginServer::System {
 	class LoginSystem : public SystemBase {
 	public:
 		void Init(App &app) override;

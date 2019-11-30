@@ -4,7 +4,7 @@
 
 
 #pragma once
-namespace Sirius {
+namespace Yoa {
 
 	class NoCopyAble {
 	public:

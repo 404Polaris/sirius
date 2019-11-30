@@ -3,9 +3,9 @@
 //
 
 
-#include <Sirius/Server/LoginServer/Game/Network/MessageReader.h>
+#include <Yoa/Server/LoginServer/Game/Network/MessageReader.h>
 
-namespace Sirius::LoginServer::Game {
+namespace Yoa::LoginServer::Game {
 
 	std::tuple<bool, size_t> MessageReader::ShouldRead() {
 		if (buffer_.Size() == 0) {
