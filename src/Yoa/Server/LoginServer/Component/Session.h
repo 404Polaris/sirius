@@ -22,7 +22,7 @@ namespace Yoa::LoginServer::Component {
 
 	struct Session {
 		AuthStatus status;
-		std::shared_ptr<Yoa::TcpSession<Game::MessageReader, Yoa::LoginServer::App>> session_;
+		std::shared_ptr<Yoa::TcpSession<Game::MessageReader>> session_;
 	};
 }
 

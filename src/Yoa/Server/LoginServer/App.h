@@ -21,8 +21,9 @@ namespace Yoa::LoginServer {
 
 	class App : public std::enable_shared_from_this<App> {
 	public:
-		using _Session_type = Yoa::TcpSession<Game::MessageReader, App>;
-		using _Tcp_server_type = Yoa::TcpServer<_Session_type, App>;
+		using _Session_type = Yoa::TcpSession<Game::MessageReader>;
+		using _Conn_Cb_type = std::function<void(std::shared_ptr<_Session_type> &)>;
+		using _Tcp_server_type = Yoa::TcpServer<_Session_type, _Conn_Cb_type>;
 	private:
 		ThreadPool thread_pool_;
 		entt::registry registry_;
@@ -44,7 +45,6 @@ namespace Yoa::LoginServer {
 	public:
 		void Stop();
 		void Start();
-		void OnConnect(const std::shared_ptr<_Session_type> &session);
 	public:
 		entt::registry &GetRegistry();
 

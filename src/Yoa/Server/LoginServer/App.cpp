@@ -9,12 +9,14 @@ namespace Yoa::LoginServer {
 
 	App::App() : running_(false) {
 		update_time_ = std::chrono::steady_clock::now();
-		server_ = std::make_unique<decltype(server_)::element_type>(3724);
+		server_ = std::make_unique<decltype(server_)::element_type>(3724, [this](auto &session) {
+			auto entity = registry_.create();
+			registry_.assign<Component::Session>(entity, AuthStatus::kStatusClosed, session);
+		});
 	}
 
 	void App::Start() {
 		running_ = true;
-		server_->RegisterEnv(shared_from_this());
 		server_->Start();
 
 		CreateSystem();
@@ -71,12 +73,6 @@ namespace Yoa::LoginServer {
 
 	void App::Stop() {
 		running_ = false;
-	}
-
-	void App::OnConnect(const std::shared_ptr<_Session_type> &session) {
-		auto entity = registry_.create();
-		session->RegisterEnv(shared_from_this());
-		registry_.assign<Component::Session>(entity, AuthStatus::kStatusClosed, session);
 	}
 
 	App::~App() {
