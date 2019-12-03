@@ -9,6 +9,8 @@
 #include <queue>
 #include <memory>
 #include <chrono>
+#include <mutex>
+#include <thread>
 #include <functional>
 #include <type_traits>
 
@@ -16,7 +18,7 @@ namespace Yoa {
 
 	class Timer : NoCopyAble {
 		using _Time_point_type = std::chrono::steady_clock::time_point;
-		friend class TimerManager;
+		friend class TimerPool;
 	private:
 		bool expired_ = false;
 		_Time_point_type deadline_;
@@ -55,14 +57,14 @@ namespace Yoa {
 		}
 	};
 
-	class TimerManager : NoCopyAble {
+	class TimerPool : NoCopyAble {
 	private:
 		std::mutex mutex_{};
 		std::thread thread_{};
 		std::atomic_bool running_ = false;
 		std::priority_queue<std::shared_ptr<Timer>> timer_heap_;
 	public:
-		~TimerManager() {
+		~TimerPool() {
 			Stop();
 
 			if (thread_.joinable()) {
@@ -70,9 +72,9 @@ namespace Yoa {
 			}
 		}
 
-		TimerManager() = default;
-		TimerManager(TimerManager &&) = delete;
-		TimerManager &operator=(TimerManager &&) = delete;
+		TimerPool() = default;
+		TimerPool(TimerPool &&) = delete;
+		TimerPool &operator=(TimerPool &&) = delete;
 	public:
 		template<typename _Func_type>
 		auto AddTimer(_Func_type &&func, size_t delay) {
@@ -114,11 +116,11 @@ namespace Yoa {
 		}
 
 		void InternalLoop() {
-			const static auto sleep_duration = std::chrono::nanoseconds(1);
+			using namespace std::chrono_literals;
 
 			while (running_) {
 				if (Update()) {
-					std::this_thread::sleep_for(sleep_duration);
+					std::this_thread::sleep_for(1ns);
 				}
 			}
 		}

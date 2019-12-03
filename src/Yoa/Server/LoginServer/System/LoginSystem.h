@@ -11,7 +11,7 @@
 namespace Yoa::LoginServer::System {
 	class LoginSystem : public SystemBase {
 	public:
-		void Init(App &app) override;
+		static void Init(App &app);
 	private:
 		static void HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer);
 	};

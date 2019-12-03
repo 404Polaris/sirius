@@ -13,9 +13,9 @@ namespace Yoa::LoginServer::System {
 
 	class NetworkSystem : public SystemBase {
 	public:
-		void Init(App &app) override;
-		void Update(double delta, App &app) override;
-	public:
+		static void Init(App &app);
+	private:
+		static void Update(double delta, App &app);
 		static void HandleMessage(Component::Session &session, App &app);
 	};
 }
