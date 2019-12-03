@@ -47,8 +47,6 @@ namespace Yoa::LoginServer {
 		void Sync(_Task_type &&task) {
 			action_queue_.Push(std::forward<_Task_type>(task));
 		}
-
-		void MainLoop();
 	};
 }
 
