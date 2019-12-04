@@ -10,7 +10,7 @@
 #endif
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/Common/TcpSession.hpp>
+#include <Yoa/NetWork/TcpSession.hpp>
 
 #include <functional>
 #include <asio.hpp>

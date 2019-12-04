@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <Yoa/Common/TcpSession.hpp>
-#include <Yoa/Common/MessageBuffer.hpp>
+#include <Yoa/NetWork/TcpSession.hpp>
+#include <Yoa/NetWork/MessageBuffer.hpp>
 #include <Yoa/Server/LoginServer/Game/Network/MessageReader.h>
 #include <Yoa/Server/LoginServer/Game/AuthStatus.h>
 

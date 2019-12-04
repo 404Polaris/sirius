@@ -18,7 +18,7 @@ namespace Yoa {
 
 	class Timer : NoCopyAble {
 		using _Time_point_type = std::chrono::steady_clock::time_point;
-		friend class TimerPool;
+		friend class TimerHeap;
 	private:
 		bool expired_ = false;
 		_Time_point_type deadline_;
@@ -57,14 +57,14 @@ namespace Yoa {
 		}
 	};
 
-	class TimerPool : NoCopyAble {
+	class TimerHeap : NoCopyAble {
 	private:
 		std::mutex mutex_{};
 		std::thread thread_{};
 		std::atomic_bool running_ = false;
 		std::priority_queue<std::shared_ptr<Timer>> timer_heap_;
 	public:
-		~TimerPool() {
+		~TimerHeap() {
 			Stop();
 
 			if (thread_.joinable()) {
@@ -72,9 +72,9 @@ namespace Yoa {
 			}
 		}
 
-		TimerPool() = default;
-		TimerPool(TimerPool &&) = delete;
-		TimerPool &operator=(TimerPool &&) = delete;
+		TimerHeap() = default;
+		TimerHeap(TimerHeap &&) = delete;
+		TimerHeap &operator=(TimerHeap &&) = delete;
 	public:
 		template<typename _Func_type>
 		auto AddTimer(_Func_type &&func, size_t delay) {

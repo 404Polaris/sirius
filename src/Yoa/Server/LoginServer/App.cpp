@@ -35,7 +35,7 @@ namespace Yoa::LoginServer {
 	}
 
 	App::~App() {
-		timer_pool_.Stop();
-		thread_pool_.Stop();
+		timer_heap_.Stop();
+		async_executor_.Stop();
 	}
 }

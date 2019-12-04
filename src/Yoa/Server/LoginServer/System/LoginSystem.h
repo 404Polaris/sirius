@@ -6,7 +6,7 @@
 
 #include <Yoa/Server/LoginServer/System/SystemBase.hpp>
 #include <Yoa/Server/LoginServer/Component/Session.h>
-#include <Yoa/Common/MessageBuffer.hpp>
+#include <Yoa/NetWork/MessageBuffer.hpp>
 
 namespace Yoa::LoginServer::System {
 	class LoginSystem : public SystemBase {

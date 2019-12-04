@@ -6,7 +6,7 @@
 #pragma once
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/Common/MessageBuffer.hpp>
+#include <Yoa/NetWork/MessageBuffer.hpp>
 #include <Yoa/Server/LoginServer/Game/Network/Protocol.h>
 
 #include <vector>

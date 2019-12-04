@@ -6,8 +6,7 @@
 #pragma once
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/Common/EnableYoaEnv.hpp>
-#include <Yoa/Common/MessageBuffer.hpp>
+#include <Yoa/NetWork/MessageBuffer.hpp>
 
 #include <queue>
 #include <mutex>
