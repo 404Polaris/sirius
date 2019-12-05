@@ -16,31 +16,32 @@ namespace Yoa {
 	class ASyncExecutor : NoCopyAble {
 	protected:
 		const size_t thread_num_;
-		std::atomic_bool running_;
+		std::atomic_bool running_ = false;
 		std::unique_ptr<asio::thread_pool> thread_pool_;
 	public:
 		ASyncExecutor();
 		~ASyncExecutor();
 		explicit ASyncExecutor(size_t num);
 	public:
-		template<typename _Task_type>
-		void Post(_Task_type &&task);
+		template<typename _Task_t>
+		void Post(_Task_t &&task);
 		void Stop();
+		void Start();
 		size_t Size();
 	};
 
-	inline ASyncExecutor::ASyncExecutor(size_t num) : thread_num_(num), running_(true) {
-		thread_pool_ = std::make_unique<asio::thread_pool>(num);
+	inline ASyncExecutor::ASyncExecutor(size_t num) : thread_num_(num) {
+
 	}
 
 	inline ASyncExecutor::ASyncExecutor() : ASyncExecutor(std::thread::hardware_concurrency()) {
 
 	}
 
-	template<typename _Task_type>
-	inline void ASyncExecutor::Post(_Task_type &&task) {
+	template<typename _Task_t>
+	inline void ASyncExecutor::Post(_Task_t &&task) {
 		if (!running_)return;
-		asio::post(*thread_pool_, std::forward<_Task_type>(task));
+		asio::post(*thread_pool_, std::forward<_Task_t>(task));
 	}
 
 	inline size_t ASyncExecutor::Size() {
@@ -50,6 +51,15 @@ namespace Yoa {
 	inline ASyncExecutor::~ASyncExecutor() {
 		Stop();
 		thread_pool_.reset();
+	}
+
+	inline void ASyncExecutor::Start() {
+		if (thread_pool_) {
+			Stop();
+		}
+
+		thread_pool_ = std::make_unique<asio::thread_pool>(thread_num_);
+		running_ = true;
 	}
 
 	inline void ASyncExecutor::Stop() {

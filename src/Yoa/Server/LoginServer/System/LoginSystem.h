@@ -6,14 +6,16 @@
 
 #include <Yoa/Server/LoginServer/System/SystemBase.hpp>
 #include <Yoa/Server/LoginServer/Component/Session.h>
-#include <Yoa/NetWork/MessageBuffer.hpp>
+#include <Yoa/Server/LoginServer/Event/NetCommandEvent.h>
+#include <Yoa/Net/MessageBuffer.hpp>
 
 namespace Yoa::LoginServer::System {
 	class LoginSystem : public SystemBase {
 	public:
-		static void Init(App &app);
+		static void Init(Environment &env);
 	private:
-		static void HandleAuthLogonChallenge(Component::Session &session, App &app, MessageBuffer &msg_buffer);
+		static void RegisterEvent(Environment &env);
+		static void HandleAuthLogonChallenge(const NetCommandEvent<RemoteCommand::kAuthLogonChallenge> &event);
 	};
 }
 

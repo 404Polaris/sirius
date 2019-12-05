@@ -6,7 +6,7 @@
 #pragma once
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/NetWork/MessageBuffer.hpp>
+#include <Yoa/Net/MessageBuffer.hpp>
 
 #include <queue>
 #include <mutex>
@@ -21,13 +21,13 @@ namespace Yoa {
 		using tcp = asio::ip::tcp;
 	}
 
-	template<typename _Msg_reader_type>
-	class TcpSession : public std::enable_shared_from_this<TcpSession<_Msg_reader_type>>,
+	template<typename _Msg_reader_t>
+	class TcpSession : public std::enable_shared_from_this<TcpSession<_Msg_reader_t>>,
 					   public NoCopyAble {
 	protected:
 		bool work_fine_;
 		std::mutex read_mutex_;
-		_Msg_reader_type reader_;
+		_Msg_reader_t reader_;
 		net_lib::tcp::socket socket_;
 		net_lib::io_context::strand strand_;
 		std::queue<MessageBuffer> read_buffer_queue_;
@@ -47,31 +47,31 @@ namespace Yoa {
 		void ReadMsgComplete();
 	};
 
-	template<typename _Msg_reader_type>
-	inline TcpSession<_Msg_reader_type>::TcpSession(net_lib::tcp::socket socket,
+	template<typename _Msg_reader_t>
+	inline TcpSession<_Msg_reader_t>::TcpSession(net_lib::tcp::socket socket,
 													net_lib::io_context &io_context)
 		: work_fine_(false), socket_(std::move(socket)), strand_(io_context) {
 	}
 
-	template<typename _Msg_reader_type>
-	inline TcpSession<_Msg_reader_type>::~TcpSession() {
+	template<typename _Msg_reader_t>
+	inline TcpSession<_Msg_reader_t>::~TcpSession() {
 		socket_.close();
 	}
 
-	template<typename _Msg_reader_type>
-	inline void TcpSession<_Msg_reader_type>::Start() {
+	template<typename _Msg_reader_t>
+	inline void TcpSession<_Msg_reader_t>::Start() {
 		work_fine_ = true;
 		reader_.Init();
 		ReadMsg();
 	}
 
-	template<typename _Msg_reader_type>
-	void TcpSession<_Msg_reader_type>::Close() {
+	template<typename _Msg_reader_t>
+	void TcpSession<_Msg_reader_t>::Close() {
 		work_fine_ = false;
 	}
 
-	template<typename _Msg_reader_type>
-	inline void TcpSession<_Msg_reader_type>::ReadMsg() {
+	template<typename _Msg_reader_t>
+	inline void TcpSession<_Msg_reader_t>::ReadMsg() {
 		if (!work_fine_)return;
 
 		auto[no_error, length] = reader_.ShouldRead();
@@ -97,16 +97,16 @@ namespace Yoa {
 						 }));
 	}
 
-	template<typename _Msg_reader_type>
-	void TcpSession<_Msg_reader_type>::ReadMsgComplete() {
+	template<typename _Msg_reader_t>
+	void TcpSession<_Msg_reader_t>::ReadMsgComplete() {
 		std::lock_guard<std::mutex> lock(read_mutex_);
 
 		auto buffer = reader_.PopBuffer();
 		read_buffer_queue_.emplace(std::move(buffer));
 	}
 
-	template<typename _Msg_reader_type>
-	inline void TcpSession<_Msg_reader_type>::WriteMsg() {
+	template<typename _Msg_reader_t>
+	inline void TcpSession<_Msg_reader_t>::WriteMsg() {
 		if (!work_fine_)return;
 
 		auto that = this->shared_from_this();
@@ -126,8 +126,8 @@ namespace Yoa {
 						  }));
 	}
 
-	template<typename _Msg_reader_type>
-	inline void TcpSession<_Msg_reader_type>::Write(MessageBuffer buffer) {
+	template<typename _Msg_reader_t>
+	inline void TcpSession<_Msg_reader_t>::Write(MessageBuffer buffer) {
 		if (!work_fine_)return;
 
 		auto that = this->shared_from_this();
@@ -142,13 +142,13 @@ namespace Yoa {
 		}));
 	}
 
-	template<typename _Msg_reader_type>
-	inline bool TcpSession<_Msg_reader_type>::WorkFine() {
+	template<typename _Msg_reader_t>
+	inline bool TcpSession<_Msg_reader_t>::WorkFine() {
 		return work_fine_;
 	}
 
-	template<typename _Msg_reader_type>
-	std::optional<MessageBuffer> TcpSession<_Msg_reader_type>::Read() {
+	template<typename _Msg_reader_t>
+	std::optional<MessageBuffer> TcpSession<_Msg_reader_t>::Read() {
 		std::lock_guard<std::mutex> lock(read_mutex_);
 
 		if (read_buffer_queue_.empty())return std::nullopt;

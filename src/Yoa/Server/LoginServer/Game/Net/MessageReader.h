@@ -6,8 +6,8 @@
 #pragma once
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/NetWork/MessageBuffer.hpp>
-#include <Yoa/Server/LoginServer/Game/Network/Protocol.h>
+#include <Yoa/Net/MessageBuffer.hpp>
+#include <Yoa/Server/LoginServer/Game/Net/Protocol.h>
 
 #include <vector>
 #include <cstddef>
@@ -23,12 +23,12 @@ namespace Yoa::LoginServer::Game {
 		inline static const auto cmd_size_ = sizeof(uint8_t);
 	public:
 		void Init();
-		std::byte *Tail();
 		void Write(size_t n);
 		MessageBuffer PopBuffer();
+		std::byte *Tail();
 		std::tuple<bool, size_t> ShouldRead();
 	protected:
-		template<typename Msg_type>
+		template<typename _Msg_t>
 		std::tuple<bool, size_t> Check();
 	};
 
@@ -36,9 +36,9 @@ namespace Yoa::LoginServer::Game {
 		return buffer_.Tail();
 	}
 
-	template<typename Msg_type>
+	template<typename _Msg_t>
 	inline std::tuple<bool, size_t> MessageReader::Check() {
-		constexpr auto message_size = sizeof(Msg_type);
+		constexpr auto message_size = sizeof(_Msg_t);
 
 		std::tuple<bool, size_t> result{true, message_size - buffer_.Size()};
 
@@ -50,19 +50,19 @@ namespace Yoa::LoginServer::Game {
 
 	template<>
 	inline std::tuple<bool, size_t> MessageReader::Check<S_AuthLogonChallenge_C>() {
-		static const size_t initial_size = 4;
+		static const size_t min_size = 4;
 		static const size_t max_size = sizeof(S_AuthLogonChallenge_C) + 16;
 
-		if (buffer_.Size() < initial_size)
-			return {true, initial_size - buffer_.Size()};
+		if (buffer_.Size() < min_size)
+			return {true, min_size - buffer_.Size()};
 
-		auto *challenge = reinterpret_cast<S_AuthLogonChallenge_C *>(buffer_.Data());
+		auto *challenge = reinterpret_cast<const S_AuthLogonChallenge_C *>(buffer_.Data());
 
-		if (challenge->size + initial_size > max_size)
+		if (challenge->size + min_size > max_size)
 			return {false, 0};
 
-		if (challenge->size + initial_size > buffer_.Size())
-			return {true, (challenge->size + initial_size) - buffer_.Size()};
+		if (challenge->size + min_size > buffer_.Size())
+			return {true, (challenge->size + min_size) - buffer_.Size()};
 
 		auto legal = (buffer_.Size() + 1 - sizeof(S_AuthLogonChallenge_C) == challenge->i_len);
 		std::tuple<bool, size_t> result{legal, 0};

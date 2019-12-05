@@ -4,15 +4,16 @@
 
 #pragma once
 
-#include <entt/entt.hpp>
-#include <Yoa/Common/ASyncExecutor.hpp>
+#include <Yoa/Server/LoginServer/Event/Events.h>
 
 namespace Yoa::LoginServer {
-	class App;
+	class Environment;
 }
 
 namespace Yoa::LoginServer::System {
+	using namespace Event;
 
 	class SystemBase {
+
 	};
 }

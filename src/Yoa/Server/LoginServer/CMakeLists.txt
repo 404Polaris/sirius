@@ -3,9 +3,9 @@ project(LoginServer)
 
 set(source_file_list
         Main.cpp
-        Game/Network/MessageReader.cpp
+        Game/Net/MessageReader.cpp
         System/NetworkSystem.cpp
-        System/LoginSystem.cpp App.cpp)
+        System/LoginSystem.cpp Environment.cpp)
 
 add_executable(LoginServer ${source_file_list})
 target_link_libraries(LoginServer PUBLIC EnTT fmt::fmt fmt::fmt-header-only pthread sol2::sol2)

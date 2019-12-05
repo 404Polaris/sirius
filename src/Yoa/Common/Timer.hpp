@@ -17,27 +17,27 @@
 namespace Yoa {
 
 	class Timer : NoCopyAble {
-		using _Time_point_type = std::chrono::steady_clock::time_point;
+		using _Time_point_t = std::chrono::steady_clock::time_point;
 		friend class TimerHeap;
 	private:
 		bool expired_ = false;
-		_Time_point_type deadline_;
+		_Time_point_t deadline_;
 		std::function<void()> func_;
 	public:
-		template<typename _Func_type>
-		Timer(_Time_point_type deadline, _Func_type &&func):deadline_(deadline), func_(std::forward<_Func_type>(func)) {
-			static_assert(std::is_invocable<typename std::decay<_Func_type>::type>::value,
+		template<typename _Func_t>
+		Timer(_Time_point_t deadline, _Func_t &&func):deadline_(deadline), func_(std::forward<_Func_t>(func)) {
+			static_assert(std::is_invocable<typename std::decay<_Func_t>::type>::value,
 						  "Wrong timer callback type.");
 		}
 
 		Timer(Timer &&other) noexcept  : deadline_(other.deadline_), func_(std::move(other.func_)) {
-			other.deadline_ = _Time_point_type();
+			other.deadline_ = _Time_point_t();
 		}
 
 		Timer &operator=(Timer &&other) noexcept {
 			this->deadline_ = other.deadline_;
 			this->func_ = std::move(other.func_);
-			other.deadline_ = _Time_point_type();
+			other.deadline_ = _Time_point_t();
 			return *this;
 		}
 	public:
@@ -76,10 +76,10 @@ namespace Yoa {
 		TimerHeap(TimerHeap &&) = delete;
 		TimerHeap &operator=(TimerHeap &&) = delete;
 	public:
-		template<typename _Func_type>
-		auto AddTimer(_Func_type &&func, size_t delay) {
+		template<typename _Func_t>
+		auto AddTimer(_Func_t &&func, size_t delay) {
 			auto deadline = std::chrono::steady_clock::now() + std::chrono::microseconds(delay);
-			auto timer = std::make_shared<Timer>(deadline, std::forward<_Func_type>(func));
+			auto timer = std::make_shared<Timer>(deadline, std::forward<_Func_t>(func));
 
 			{
 				std::lock_guard<std::mutex> lock(mutex_);

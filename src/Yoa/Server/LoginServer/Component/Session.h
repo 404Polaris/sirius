@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <Yoa/NetWork/TcpSession.hpp>
-#include <Yoa/NetWork/MessageBuffer.hpp>
-#include <Yoa/Server/LoginServer/Game/Network/MessageReader.h>
+#include <Yoa/Net/TcpSession.hpp>
+#include <Yoa/Net/MessageBuffer.hpp>
+#include <Yoa/Server/LoginServer/Game/Net/MessageReader.h>
 #include <Yoa/Server/LoginServer/Game/AuthStatus.h>
 
 #include <queue>
@@ -15,7 +15,7 @@
 #include <memory>
 
 namespace Yoa::LoginServer {
-	class App;
+	class Environment;
 }
 
 namespace Yoa::LoginServer::Component {

@@ -10,7 +10,7 @@
 #endif
 
 #include <Yoa/Common/NoCopyAble.hpp>
-#include <Yoa/NetWork/TcpSession.hpp>
+#include <Yoa/Net/TcpSession.hpp>
 
 #include <functional>
 #include <asio.hpp>
@@ -22,14 +22,14 @@ namespace Yoa {
 		using tcp = asio::ip::tcp;
 	}
 
-	template<typename _Session_type>
+	template<typename _Session_t>
 	class TcpServer : public NoCopyAble {
 	protected:
 		std::atomic_bool running_;
 		net_lib::io_context io_context_;
 		net_lib::tcp::acceptor acceptor_;
 		std::vector<std::thread> threads_;
-		std::function<void(std::shared_ptr<_Session_type> &)> on_conn_;
+		std::function<void(std::shared_ptr<_Session_t> &)> on_conn_;
 	public:
 		explicit TcpServer(uint16_t port, decltype(on_conn_) on_conn);
 		~TcpServer();
@@ -39,8 +39,8 @@ namespace Yoa {
 		void Accept();
 	};
 
-	template<typename _Session_type>
-	inline TcpServer<_Session_type>::TcpServer(uint16_t port, decltype(on_conn_) on_conn) :
+	template<typename _Session_t>
+	inline TcpServer<_Session_t>::TcpServer(uint16_t port, decltype(on_conn_) on_conn) :
 		running_(false),
 		acceptor_(io_context_,
 				  net_lib::tcp::endpoint(net_lib::tcp::v4(),
@@ -48,8 +48,8 @@ namespace Yoa {
 		on_conn_(on_conn) {
 	}
 
-	template<typename _Session_type>
-	inline void TcpServer<_Session_type>::Start() {
+	template<typename _Session_t>
+	inline void TcpServer<_Session_t>::Start() {
 		running_ = true;
 
 		Accept();
@@ -61,14 +61,14 @@ namespace Yoa {
 		}
 	}
 
-	template<typename _Session_type>
-	inline void TcpServer<_Session_type>::Accept() {
+	template<typename _Session_t>
+	inline void TcpServer<_Session_t>::Accept() {
 		if (!running_)return;
 
 		acceptor_.async_accept(
 			[this](std::error_code ec, net_lib::tcp::socket socket) {
 				if (!ec) {
-					auto session = std::make_shared<_Session_type>(std::move(socket), io_context_);
+					auto session = std::make_shared<_Session_t>(std::move(socket), io_context_);
 					on_conn_(session);
 					session->Start();
 				}
@@ -77,8 +77,8 @@ namespace Yoa {
 			});
 	}
 
-	template<typename _Session_type>
-	inline TcpServer<_Session_type>::~TcpServer() {
+	template<typename _Session_t>
+	inline TcpServer<_Session_t>::~TcpServer() {
 		bool flag = running_;
 		running_ = false;
 

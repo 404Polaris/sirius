@@ -13,46 +13,75 @@
 
 namespace Yoa {
 	class SyncExecutor : public NoCopyAble {
-		using Action_type = std::function<void()>;
+		using Task_type = std::function<void()>;
 	private:
-		std::mutex mutex_;
-		std::queue<Action_type> action_queue_{};
+		std::mutex mutex_{};
+		std::thread thread_{};
+		std::atomic_bool running_ = false;
+		std::queue<Task_type> task_queue_{};
 	public:
 		SyncExecutor() = default;
-		SyncExecutor(SyncExecutor &&other) noexcept;
-		SyncExecutor &operator=(SyncExecutor &&other) noexcept;
 
-	public:
-		template<typename _Fun_type>
-		void Push(_Fun_type &&action);
-
-		std::optional<Action_type> Pop();
-	};
-
-	inline SyncExecutor &SyncExecutor::operator=(SyncExecutor &&other) noexcept {
-		this->action_queue_ = std::move(other.action_queue_);
-		return *this;
-	}
-
-	inline SyncExecutor::SyncExecutor(SyncExecutor &&other) noexcept : action_queue_(std::move(other.action_queue_)) {}
-
-	template<typename _Fun_type>
-	inline void SyncExecutor::Push(_Fun_type &&action) {
-		std::unique_lock<std::mutex> lock(mutex_);
-		action_queue_.push(std::forward<_Fun_type>(action));
-	}
-
-	inline std::optional<SyncExecutor::Action_type> SyncExecutor::Pop() {
-		std::unique_lock<std::mutex> lock(mutex_);
-
-		if (action_queue_.empty()) {
-			return std::nullopt;
+		~SyncExecutor() {
+			Stop();
+			thread_.join();
 		}
 
-		auto action = std::move(action_queue_.front());
-		action_queue_.pop();
-		return std::move(action);
-	}
+		SyncExecutor &operator=(SyncExecutor &&other) noexcept {
+			this->task_queue_ = std::move(other.task_queue_);
+			return *this;
+		}
+
+		SyncExecutor(SyncExecutor &&other) noexcept :
+			task_queue_(std::move(other.task_queue_)) {
+		}
+
+	private:
+		void Update() {
+			using namespace std::chrono_literals;
+
+			while (running_) {
+				bool free_ = true;
+				while (auto task = Pop()) {
+					task.value()();
+					free_ = false;
+				}
+
+				if (free_) {
+					std::this_thread::sleep_for(1ns);
+				}
+			}
+		}
+
+		std::optional<Task_type> Pop() {
+			std::unique_lock<std::mutex> lock(mutex_);
+
+			if (task_queue_.empty()) {
+				return std::nullopt;
+			}
+
+			auto task = std::move(task_queue_.front());
+			task_queue_.pop();
+			return task;
+		}
+	public:
+		void Start() {
+			running_ = true;
+			thread_ = std::thread([this]() { Update(); });
+		}
+
+		void Stop() {
+			running_ = false;
+		}
+
+		template<typename _Fun_t>
+		void Push(_Fun_t &&task) {
+			{
+				std::unique_lock<std::mutex> lock(mutex_);
+				task_queue_.push(std::forward<_Fun_t>(task));
+			}
+		}
+	};
 }
 
 

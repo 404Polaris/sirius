@@ -4,51 +4,51 @@
 
 #include <Yoa/Server/LoginServer/System/NetworkSystem.h>
 #include <Yoa/Server/LoginServer/Component/Session.h>
-#include <Yoa/Server/LoginServer/Component/RemoteCmdHandlerMap.h>
-#include <Yoa/Server/LoginServer/App.h>
+#include <Yoa/Server/LoginServer/Environment.h>
 
 namespace Yoa::LoginServer::System {
-	void NetworkSystem::Init(App &app) {
-		auto &registry = app.GetRegistry();
-		auto entity = registry.create();
-		registry.assign<Component::RemoteCmdHandlerMap>(entity);
+	void NetworkSystem::Init(Environment &env) {
+		RegisterEvent(env);
 	}
 
-	void NetworkSystem::Update(double delta, App &app) {
-		auto &registry = app.GetRegistry();
+	void NetworkSystem::RegisterEvent(Environment &env) {
+		env.RegisterEvent<Event::UpdateEvent, &NetworkSystem::Update>();
+	}
+
+	void NetworkSystem::Update(const Event::UpdateEvent &event) {
+		auto &env = event.env_;
+
+		auto &registry = env.GetRegistry();
 		auto view = registry.view<Component::Session>();
 
 		for (auto entity: view) {
 			Component::Session &session = view.get(entity);
 
 			if (session.session_->WorkFine()) {
-				HandleMessage(session, app);
+				HandleMessage(session, env);
 			} else {
 				registry.destroy(entity);
 			}
 		}
 	}
 
-	void NetworkSystem::HandleMessage(Component::Session &session, App &app) {
-		auto &registry = app.GetRegistry();
-		auto view = registry.view<Component::RemoteCmdHandlerMap>();
+	void NetworkSystem::HandleMessage(Component::Session &session, Environment &env, MessageBuffer &buffer) {
+		auto cmd = (RemoteCommand) buffer.Data()[0];
 
-		if (view.empty())return;
+		switch (cmd) {
+			case RemoteCommand::kAuthLogonChallenge:
+				env.TriggerEvent(NetCommandEvent<RemoteCommand::kAuthLogonChallenge>{env, buffer, session});
+			case RemoteCommand::kAuthLogonProof:break;
+			case RemoteCommand::kAuthReconnectChallenge:break;
+			case RemoteCommand::kAuthReconnectProof:break;
+			case RemoteCommand::kRealmList:break;
+		}
+	}
 
-		while (true) {
-			auto opt = session.session_->Read();
-
-			if (opt) {
-				auto buffer = std::move(opt.value());
-				auto cmd = (LoginServerCmd) buffer.Data()[0];
-				auto &delegate = view.raw()->delegate_map_[cmd];
-
-				if (delegate) {
-					delegate(session, app, buffer);
-				}
-			} else {
-				break;
-			}
+	void NetworkSystem::HandleMessage(Component::Session &session, Environment &env) {
+		while (auto opt = session.session_->Read()) {
+			auto buffer = std::move(opt.value());
+			HandleMessage(session, env, buffer);
 		}
 	}
 }
