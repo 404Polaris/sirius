@@ -7,7 +7,7 @@
 
 namespace Yoa::LoginServer::System {
 
-	void LoginSystem::Init(Environment &env) {
+	void LoginSystem::Load(Environment &env) {
 		RegisterEvent(env);
 	}
 

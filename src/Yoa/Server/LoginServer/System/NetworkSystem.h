@@ -14,7 +14,7 @@ namespace Yoa::LoginServer::System {
 
 	class NetworkSystem : public SystemBase {
 	public:
-		static void Init(Environment &env);
+		static void Load(Environment &env);
 	private:
 		static void Update(const Event::UpdateEvent &event);
 		static void RegisterEvent(Environment &env);

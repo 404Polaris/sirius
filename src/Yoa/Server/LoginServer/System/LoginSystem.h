@@ -12,7 +12,7 @@
 namespace Yoa::LoginServer::System {
 	class LoginSystem : public SystemBase {
 	public:
-		static void Init(Environment &env);
+		static void Load(Environment &env);
 	private:
 		static void RegisterEvent(Environment &env);
 		static void HandleAuthLogonChallenge(const NetCommandEvent<RemoteCommand::kAuthLogonChallenge> &event);

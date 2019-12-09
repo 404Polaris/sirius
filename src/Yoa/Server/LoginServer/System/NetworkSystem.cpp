@@ -7,7 +7,7 @@
 #include <Yoa/Server/LoginServer/Environment.h>
 
 namespace Yoa::LoginServer::System {
-	void NetworkSystem::Init(Environment &env) {
+	void NetworkSystem::Load(Environment &env) {
 		RegisterEvent(env);
 	}
 

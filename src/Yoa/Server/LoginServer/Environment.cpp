@@ -30,8 +30,8 @@ namespace Yoa::LoginServer {
 	}
 
 	void Environment::InitSystem() {
-		System::NetworkSystem::Init(*this);
-		System::LoginSystem::Init(*this);
+		System::NetworkSystem::Load(*this);
+		System::LoginSystem::Load(*this);
 	}
 
 	void Environment::TriggerUpdateEvent() {
