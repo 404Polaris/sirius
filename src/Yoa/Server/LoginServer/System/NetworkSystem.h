@@ -7,7 +7,6 @@
 
 #include <Yoa/Server/LoginServer/System/SystemBase.hpp>
 #include <Yoa/Server/LoginServer/Component/Session.h>
-#include <Yoa/Server/LoginServer/Event/UpdateEvent.h>
 #include <fmt/format.h>
 
 namespace Yoa::LoginServer::System {
@@ -16,10 +15,9 @@ namespace Yoa::LoginServer::System {
 	public:
 		static void Load(Environment &env);
 	private:
-		static void Update(const Event::UpdateEvent &event);
+		static void Update(EventBase *evt);
 		static void RegisterEvent(Environment &env);
 		static void HandleMessage(Component::Session &session, Environment &env);
-		static void HandleMessage(Component::Session &session, Environment &env, MessageBuffer &buffer);
 	};
 }
 

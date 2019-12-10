@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Yoa/Server/LoginServer/Event/Events.h>
+#include <Yoa/Server/LoginServer/Game/Events.h>
 
 namespace Yoa::LoginServer {
 	class Environment;

@@ -3,7 +3,7 @@
 //
 
 #include <Yoa/Server/LoginServer/Environment.h>
-#include <Yoa/Server/LoginServer/Event/Events.h>
+#include <Yoa/Server/LoginServer/Game/Events.h>
 #include <Yoa/Server/LoginServer/System/LoginSystem.h>
 #include <Yoa/Server/LoginServer/System/NetworkSystem.h>
 

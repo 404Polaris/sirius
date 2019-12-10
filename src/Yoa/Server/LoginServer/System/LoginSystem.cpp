@@ -12,13 +12,13 @@ namespace Yoa::LoginServer::System {
 	}
 
 	void LoginSystem::RegisterEvent(Environment &env) {
-		using _Event_type = NetCommandEvent<RemoteCommand::kAuthLogonChallenge>;
-		env.RegisterEvent<_Event_type, &LoginSystem::HandleAuthLogonChallenge>();
+//		using _Event_type = NetCmdEvent<RemoteCommand::kAuthLogonChallenge>;
+//		env.RegisterEvent<_Event_type, &LoginSystem::HandleAuthLogonChallenge>();
 	}
 
-	void LoginSystem::HandleAuthLogonChallenge(const NetCommandEvent<RemoteCommand::kAuthLogonChallenge> &event) {
-		auto &session = event.session_;
-		auto &buffer = event.buffer_;
+	void LoginSystem::HandleAuthLogonChallenge(NetCmdEvent *event) {
+		auto &session = event->session_;
+		auto &buffer = event->buffer_;
 
 		session.status = AuthStatus::kStatusClosed;
 		auto *challenge = reinterpret_cast<S_AuthLogonChallenge_C *>(buffer.Data());
