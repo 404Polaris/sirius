@@ -12,11 +12,12 @@ namespace Yoa::LoginServer::System {
 	}
 
 	void LoginSystem::RegisterEvent(Environment &env) {
-//		using _Event_type = NetCmdEvent<RemoteCommand::kAuthLogonChallenge>;
-//		env.RegisterEvent<_Event_type, &LoginSystem::HandleAuthLogonChallenge>();
+		env.RegisterEvent<NetCmdEvent, &LoginSystem::HandleAuthLogonChallenge, RemoteCommand::kAuthLogonChallenge>();
 	}
 
-	void LoginSystem::HandleAuthLogonChallenge(NetCmdEvent *event) {
+	void LoginSystem::HandleAuthLogonChallenge(EventBase *evt) {
+		auto event = reinterpret_cast<NetCmdEvent *>(evt);
+
 		auto &session = event->session_;
 		auto &buffer = event->buffer_;
 

@@ -67,6 +67,7 @@ typedef struct {
 #pragma pack(pop)
 
 enum class RemoteCommand : uint8_t {
+	kVoid = 0xff,
 	kAuthLogonChallenge = 0x00,
 	kAuthLogonProof = 0x01,
 	kAuthReconnectChallenge = 0x02,

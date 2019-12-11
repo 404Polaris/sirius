@@ -14,7 +14,7 @@ namespace Yoa::LoginServer::System {
 		static void Load(Environment &env);
 	private:
 		static void RegisterEvent(Environment &env);
-		static void HandleAuthLogonChallenge(NetCmdEvent *event);
+		static void HandleAuthLogonChallenge(EventBase *evt);
 	};
 }
 

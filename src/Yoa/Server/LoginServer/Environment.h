@@ -44,8 +44,10 @@ namespace Yoa::LoginServer {
 
 		template<typename _Event_t>
 		void TriggerEvent(_Event_t &&evt) {
+			using namespace Event;
+
 			Sync([this, evt_ = std::forward<_Event_t>(evt)]() mutable {
-				event_dispatcher_.TriggerEvent<_Event_t>(std::move(evt_));
+				event_dispatcher_.TriggerEvent(EventBase::GetEventId(evt_), &evt_);
 			});
 		}
 
@@ -54,17 +56,35 @@ namespace Yoa::LoginServer {
 			TriggerEvent<_Event_t>(_Event_t{std::forward<Args>(args)...});
 		}
 
-		template<typename _Event_t, auto FUN>
-		void RegisterEvent() {
-			Sync([this] {
-				event_dispatcher_.RegisterEvent<_Event_t>(FUN);
+		template<auto FUN, typename Id_type = Event::EventBase::Id_type>
+		void RegisterEvent(Id_type id) {
+			Sync([this, id] {
+				event_dispatcher_.RegisterEvent(id, FUN);
 			});
 		}
 
-		template<typename _Event_t, auto FUN>
-		void UnRegisterEvent() {
+		template<auto FUN, typename Id_type = Event::EventBase::Id_type>
+		void UnRegisterEvent(Id_type id) {
+			Sync([this, id] {
+				event_dispatcher_.UnRegisterEvent(id, FUN);
+			});
+		}
+
+		template<typename _Event_t, auto FUN, RemoteCommand CMD = RemoteCommand::kVoid>
+		void RegisterEvent() {
+			using namespace Event;
+
 			Sync([this] {
-				event_dispatcher_.UnRegisterEvent<_Event_t>(FUN);
+				event_dispatcher_.RegisterEvent(EventBase::GetEventId<_Event_t, CMD>(), FUN);
+			});
+		}
+
+		template<typename _Event_t, auto FUN, RemoteCommand CMD = RemoteCommand::kVoid>
+		void UnRegisterEvent() {
+			using namespace Event;
+
+			Sync([this] {
+				event_dispatcher_.UnRegisterEvent(EventBase::GetEventId<_Event_t, CMD>(), FUN);
 			});
 		}
 

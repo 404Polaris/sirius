@@ -26,6 +26,7 @@ namespace Yoa::LoginServer::Game {
 				break;
 			case RemoteCommand::kRealmList: result = Check<S_RealmList_C>();
 				break;
+			case RemoteCommand::kVoid:break;
 		}
 
 		if (std::get<bool>(result))

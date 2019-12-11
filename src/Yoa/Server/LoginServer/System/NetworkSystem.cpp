@@ -37,7 +37,7 @@ namespace Yoa::LoginServer::System {
 		while (auto opt = session.session_->Read()) {
 			auto buffer = std::move(opt.value());
 			auto cmd = (RemoteCommand) buffer.Data()[0];
-			env.TriggerEvent<NetCmdEvent>(env, std::move(buffer), session);
+			env.TriggerEvent<NetCmdEvent>(env, cmd, std::move(buffer), session);
 		}
 	}
 }
